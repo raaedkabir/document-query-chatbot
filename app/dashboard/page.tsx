@@ -22,8 +22,8 @@ export default function Dashboard() {
           </div>
         </Modal>
       )}
-      <div className="col-span-7 mx-auto w-full p-4 pl-0 md:col-span-8 xl:col-span-9">
-        <div className="min-h-full rounded-2xl border border-gray-dark/50 p-5">
+      <div className="mx-auto w-full p-4 sm:pl-0">
+        <div className="rounded-2xl border border-gray-dark/50 p-5">
           <div className="container mx-auto text-center">
             <h1 className="text-center text-3xl font-bold text-primary">
               DOCQA

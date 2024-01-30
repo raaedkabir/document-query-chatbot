@@ -21,6 +21,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
+    "react-focus-on": "^3.9.1",
+    "react-popper": "^2.3.0",
     "sanity": "^3.24.1",
     "styled-components": "^6.1.8"
   },

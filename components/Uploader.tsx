@@ -70,7 +70,7 @@ export default function Uploader() {
 
   return (
     <div
-      className="cursor-pointer"
+      className="cursor-pointer text-center"
       onFocus={() => {
         setError(false)
         setErrorMessage('')
