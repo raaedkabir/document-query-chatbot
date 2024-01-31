@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import useBreakpoints from '@/hooks/useBreakpoints'
+import { useChat } from 'ai/react'
 import Image from 'next/image'
 import toast, { Toaster, resolveValue } from 'react-hot-toast'
 import { Transition } from '@headlessui/react'
@@ -12,60 +13,36 @@ import {
   ClipboardIcon,
 } from '@heroicons/react/24/outline'
 
-export default function Dashboard() {
-  const [isBotTyping, setIsBotTyping] = useState(false)
+export default function DashboardChat() {
   const [displayChat, setDisplayChat] = useState(true)
-  const [messages, setMessages] = useState<{ from: string; text: string }[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
+  const chatRef = useRef<HTMLInputElement>(null)
   const { isSm, isLg } = useBreakpoints()
+  const { messages, input, handleInputChange, handleSubmit, isLoading } =
+    useChat({
+      initialMessages: [
+        {
+          role: 'assistant',
+          id: '0',
+          content:
+            'Hi! I am your PDF assistant. I am happy to help with your questions about your PDF.',
+        },
+      ],
+    })
 
   useEffect(() => {
-    if (messages[messages.length - 1]?.from === 'user') {
-      // add a fake response from the bot
-      setTimeout(() => {
-        addChat('Hello World!', 'bot')
-      }, 1000)
+    if (chatRef.current) {
+      const lastMessage = chatRef.current.lastElementChild
+      if (lastMessage) {
+        lastMessage.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        })
+      }
     }
   }, [messages])
 
   const notify = () => toast('Copied to clipboard!')
-
-  const updateChat = (input: HTMLInputElement) => {
-    if (input.value.trim()) {
-      addChat(input.value.trim(), 'user')
-      input.value = ''
-    }
-  }
-
-  const scrollChat = () => {
-    const messagesContainer = document.getElementById('messages') as HTMLElement
-
-    setTimeout(() => {
-      messagesContainer.scrollTop =
-        messagesContainer.scrollHeight - messagesContainer.clientHeight
-    }, 100)
-  }
-
-  const addChat = (input: string, from: string) => {
-    if (from === 'bot') {
-      setIsBotTyping(true)
-      scrollChat()
-
-      // add bot message with fake delay to seem "real"
-      setTimeout(() => {
-        setIsBotTyping(false)
-        setTimeout(() => {
-          setMessages([...messages, { from: from, text: input }])
-        })
-      }, 1000)
-    } else {
-      // add message
-      setMessages([...messages, { from: from, text: input }])
-
-      // keep messages at most recent
-      scrollChat()
-    }
-  }
 
   const copyTextToClipboard = async (text: string) => {
     if ('clipboard' in navigator) {
@@ -122,81 +99,101 @@ export default function Dashboard() {
         >
           <div className="flex h-screen flex-1 flex-col justify-between bg-white pb-4 sm:p-6">
             <div
-              id="messages"
-              className="flex flex-col space-y-4 overflow-y-auto p-3"
+              ref={chatRef}
+              className="flex flex-col space-y-4 overflow-y-auto p-3 pt-36 sm:pt-3"
             >
-              {messages.map((message, key) => (
+              {messages.map((message) => (
                 <div
-                  key={key}
-                  className={`group flex items-end ${message.from === 'bot' ? '' : 'justify-end'}`}
+                  key={message.id}
+                  className={`group flex items-end ${message.role === 'assistant' ? '' : 'justify-end'}`}
                 >
                   <div
-                    className={`mx-2 flex max-w-lg flex-col space-y-2 leading-tight ${message.from == 'bot' ? 'order-2 items-start' : 'order-2 items-end'}`}
+                    className={`mx-2 flex max-w-lg flex-col space-y-2 leading-tight ${message.role == 'assistant' ? 'order-2 items-start' : 'order-2 items-end'}`}
                   >
                     <span
-                      className={`inline-block rounded-xl px-4 py-3 ${message.from == 'bot' ? 'rounded-bl-none bg-gray-light text-gray' : 'rounded-br-none bg-primary text-white'}`}
+                      style={{ overflowWrap: 'anywhere' }}
+                      className={`inline-block whitespace-pre-wrap rounded-xl px-4 py-3 ${message.role == 'assistant' ? 'rounded-bl-none bg-gray-light text-gray' : 'rounded-br-none bg-primary text-white'}`}
                     >
-                      {message.text}
+                      {message.content}
                     </span>
                   </div>
                   <Image
-                    src={message.from === 'bot' ? '/bot.png' : '/user.png'}
+                    src={
+                      message.role === 'assistant' ? '/bot.png' : '/user.png'
+                    }
                     width="512"
                     height="512"
                     alt=""
-                    className={`size-6 rounded-full ${message.from === 'bot' ? 'order-1' : 'order-3'}`}
+                    className={`size-6 rounded-full ${message.role === 'assistant' ? 'order-1' : 'order-3'}`}
                   />
                   <ClipboardIcon
-                    className={`hidden size-6 cursor-pointer self-center rounded-full bg-primary p-1 text-white group-hover:block ${message.from === 'bot' ? 'order-3' : 'order-1'}`}
+                    className={`size-6 w-6 shrink-0 cursor-pointer self-center rounded-full bg-primary p-1 text-white opacity-0 group-hover:opacity-100 ${message.role === 'assistant' ? 'order-3' : 'order-1'}`}
                     onClick={() => {
-                      copyTextToClipboard(message.text)
+                      copyTextToClipboard(message.content)
                       notify()
                     }}
                   />
                 </div>
               ))}
-              {isBotTyping && (
-                <div className="flex items-end">
-                  <div className="order-2 mx-2 flex flex-col items-start space-y-2 leading-tight">
-                    <Image
-                      src="/typing-animation.gif"
-                      width="256"
-                      height="164"
-                      alt="..."
-                      className="ml-6 w-16"
-                    />
+              {isLoading &&
+                messages[messages.length - 1].role !== 'assistant' && (
+                  <div className="flex items-end">
+                    <div className="order-2 mx-2 flex flex-col items-start space-y-2 leading-tight">
+                      <Image
+                        src="/typing-animation.gif"
+                        width="256"
+                        height="164"
+                        alt="..."
+                        className="ml-6 w-16"
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
             <div className="border-t-2 border-gray-light px-4 pt-4 sm:mb-0">
               <div className="relative flex">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Say something..."
-                  autoComplete="off"
-                  // eslint-disable-next-line jsx-a11y/no-autofocus
-                  autoFocus={true}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      updateChat(event.target as HTMLInputElement)
-                    }
-                  }}
-                  className="w-full rounded-full border-2 border-gray-light bg-gray-light py-2 pl-5 pr-16 text-gray placeholder-gray focus:border-primary focus:placeholder-gray focus:outline-none"
-                />
-                <div className="absolute inset-y-0 right-2 hidden items-center sm:flex">
-                  <button
-                    type="button"
-                    className="inline-flex size-8 items-center justify-center rounded-full bg-primary text-white transition duration-200 ease-in-out hover:bg-secondary focus:outline-none"
-                    onClick={(el) => {
-                      el.preventDefault()
-                      updateChat(inputRef.current as HTMLInputElement)
-                    }}
-                  >
-                    <ArrowRightIcon className="size-6 rounded-full bg-primary p-1 text-white" />
-                  </button>
-                </div>
+                <form onSubmit={handleSubmit}>
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    placeholder="Say something..."
+                    autoComplete="off"
+                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                    autoFocus={true}
+                    value={input}
+                    onChange={handleInputChange}
+                    className="w-full rounded-full border-2 border-gray-light bg-gray-light py-2 pl-5 pr-16 text-gray placeholder-gray focus:border-primary focus:placeholder-gray focus:outline-none"
+                  />
+                  <div className="absolute inset-y-0 right-2 hidden items-center sm:flex">
+                    <button
+                      disabled={isLoading}
+                      className="inline-flex size-8 items-center justify-center rounded-full bg-primary text-white transition duration-200 ease-in-out hover:bg-secondary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                      type="submit"
+                    >
+                      {isLoading ? (
+                        <svg
+                          aria-hidden="true"
+                          role="status"
+                          className="size-6 animate-spin bg-primary p-1 text-white"
+                          viewBox="0 0 100 101"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                            fill="currentColor"
+                          ></path>
+                          <path
+                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                            fill="#1C64F2"
+                          ></path>
+                        </svg>
+                      ) : (
+                        <ArrowRightIcon className="size-6 rounded-full bg-primary p-1 text-white" />
+                      )}
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>

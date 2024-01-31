@@ -6,17 +6,26 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup": "tsx -r dotenv/config scripts/setup.ts"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
+    "@langchain/core": "^0.1.20",
+    "@langchain/openai": "^0.0.13",
+    "@langchain/pinecone": "^0.0.1",
+    "@pinecone-database/pinecone": "^2.0.1",
     "@react-pdf-viewer/core": "^3.12.0",
     "@react-pdf-viewer/default-layout": "^3.12.0",
     "@sanity/image-url": "^1.0.2",
     "@sanity/vision": "^3.24.1",
+    "ai": "^2.2.32",
+    "dotenv": "^16.4.1",
+    "langchain": "^0.1.10",
     "next": "14.0.4",
     "next-sanity": "^7.0.9",
+    "openai": "^4.26.0",
     "pdfjs-dist": "3.4.120",
     "react": "^18",
     "react-dom": "^18",
@@ -43,6 +52,7 @@
     "postcss": "^8",
     "prettier": "^3.2.4",
     "tailwindcss": "^3.3.0",
+    "tsx": "^4.7.0",
     "typescript": "^5"
   }
 }
