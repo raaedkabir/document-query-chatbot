@@ -4,6 +4,7 @@ import { useState, useEffect, Fragment } from 'react'
 import useBreakpoints from '@/hooks/useBreakpoints'
 import dynamic from 'next/dynamic'
 import { Transition } from '@headlessui/react'
+import StoreProvider from '@/app/StoreProvider'
 import FloatingWindow from '@/components/FloatingWindow'
 import { FocusOn } from 'react-focus-on'
 import PDFIcon from '@/components/PDFIcon'
@@ -36,7 +37,7 @@ function DashboardLayoutWithNoSSR({ children }: { children: React.ReactNode }) {
   }, [isSidebarOpen, isLg])
 
   return (
-    <>
+    <StoreProvider>
       <Worker
         workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.js`}
       />
@@ -159,7 +160,7 @@ function DashboardLayoutWithNoSSR({ children }: { children: React.ReactNode }) {
       >
         {children}
       </main>
-    </>
+    </StoreProvider>
   )
 }
 

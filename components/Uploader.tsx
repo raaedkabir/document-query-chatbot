@@ -1,13 +1,18 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useDropzone } from 'react-dropzone'
 import { DocumentIcon } from '@heroicons/react/24/outline'
 import { getDocument } from 'pdfjs-dist'
+import { useAppStore } from '@/lib/store/hooks'
+import { setFileName } from '@/lib/store/features/users/usersSlice'
 
 export default function Uploader() {
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const router = useRouter()
+  const store = useAppStore()
 
   const {
     acceptedFiles,
@@ -43,13 +48,17 @@ export default function Uploader() {
           console.log(reader.result)
           getDocument(typedArray).promise.then(function (doc) {
             const numPages = doc.numPages
-            console.log('# Document Loaded')
-            console.log('Number of Pages: ' + numPages)
 
             if (numPages > 1) {
+              // remove file from acceptedFiles array
               acceptedFiles.splice(index, 1)
               setError(true)
               setErrorMessage('File has more than 1 page')
+            } else {
+              // TODO: upload file to S3
+              // TODO: upload to Pinecone
+              store.dispatch(setFileName(file.name))
+              router.push('/dashboard/chat')
             }
           })
         }

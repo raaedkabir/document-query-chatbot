@@ -12,12 +12,15 @@ import {
   ArrowPathIcon,
   ClipboardIcon,
 } from '@heroicons/react/24/outline'
+import { useAppSelector } from '@/lib/store/hooks'
 
 export default function DashboardChat() {
   const [displayChat, setDisplayChat] = useState(true)
   const inputRef = useRef<HTMLInputElement>(null)
   const chatRef = useRef<HTMLInputElement>(null)
   const { isSm, isLg } = useBreakpoints()
+  const fileName = useAppSelector((state) => state.users.fileName)
+  const userId = useAppSelector((state) => state.users.id)
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
       initialMessages: [
@@ -28,6 +31,10 @@ export default function DashboardChat() {
             'Hi! I am your PDF assistant. I am happy to help with your questions about your PDF.',
         },
       ],
+      body: {
+        fileName,
+        userId,
+      },
     })
 
   useEffect(() => {
@@ -152,7 +159,7 @@ export default function DashboardChat() {
             </div>
             <div className="border-t-2 border-gray-light px-4 pt-4 sm:mb-0">
               <div className="relative flex">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="w-full">
                   <input
                     ref={inputRef}
                     type="text"

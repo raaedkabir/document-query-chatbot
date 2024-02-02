@@ -8,6 +8,7 @@ const formatChatHistory = (message: Message) =>
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const messages: Message[] = body.messages ?? []
+  const { fileName, userId }: { fileName: string; userId: string } = body
   const question = messages[messages.length - 1].content
   // retrieve up tp 10 previous messages to use as chat history
   const chatHistory = messages
@@ -22,6 +23,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const streamingTextResponse = queryDocument({
+      fileName,
+      userId,
       question: question.replaceAll('\n', ' ').trim(),
       chatHistory: chatHistory.join('\n'),
     })
