@@ -3,6 +3,7 @@ import {
   ConfirmSignUpCommand,
   InitiateAuthCommand,
   SignUpCommand,
+  GlobalSignOutCommand,
   GetUserCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 
@@ -53,6 +54,13 @@ export const login = async (username: string, password: string) =>
 export const getUser = async (accessToken: string) =>
   await cognitoClient.send(
     new GetUserCommand({
+      AccessToken: accessToken,
+    })
+  )
+
+export const signOut = async (accessToken: string) =>
+  await cognitoClient.send(
+    new GlobalSignOutCommand({
       AccessToken: accessToken,
     })
   )

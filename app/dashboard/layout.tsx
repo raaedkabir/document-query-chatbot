@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, Fragment } from 'react'
+import { useRouter } from 'next/navigation'
 import useBreakpoints from '@/hooks/useBreakpoints'
 import dynamic from 'next/dynamic'
 import { Transition } from '@headlessui/react'
@@ -23,6 +24,7 @@ import packageJson from '@/package.json'
 const pdfjsVersion = packageJson.dependencies['pdfjs-dist']
 
 function DashboardLayoutWithNoSSR({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
   const { isSm, isLg } = useBreakpoints()
   const [isSidebarOpen, setIsSidebarOpen] = useState(isLg)
 
@@ -35,6 +37,14 @@ function DashboardLayoutWithNoSSR({ children }: { children: React.ReactNode }) {
 
     return () => window.removeEventListener('resize', handleResize)
   }, [isSidebarOpen, isLg])
+
+  async function handleSubmit() {
+    await fetch('/api/auth/signout', {
+      method: 'POST',
+    })
+
+    router.push('/')
+  }
 
   return (
     <StoreProvider>
@@ -141,7 +151,10 @@ function DashboardLayoutWithNoSSR({ children }: { children: React.ReactNode }) {
                     <UserIcon className="size-10 rounded-full" />
                   </div>
                   <div>
-                    <button className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-base font-semibold text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50">
+                    <button
+                      onClick={handleSubmit}
+                      className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-base font-semibold text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
+                    >
                       Sign Out
                     </button>
                   </div>
