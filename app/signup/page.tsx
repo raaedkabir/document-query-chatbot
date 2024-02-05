@@ -500,33 +500,6 @@ export default function Signup() {
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <input
-                          id="comments"
-                          name="comments"
-                          type="checkbox"
-                          className="block size-4 rounded-md border-0 text-primary ring-1 ring-inset ring-gray-light focus:ring-2 focus:ring-inset focus:ring-primary"
-                        />
-                        <label
-                          htmlFor="comments"
-                          className="pl-2 text-sm font-medium text-gray-dark"
-                        >
-                          Remember Me
-                        </label>
-                      </div>
-                      <div className="text-sm">
-                        <a
-                          href="/reset"
-                          className="font-semibold text-primary hover:text-primary/80"
-                        >
-                          Forgot Password?
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
                     <button
                       type="submit"
                       className="inline-flex h-9 w-full items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
