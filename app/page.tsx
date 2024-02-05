@@ -21,7 +21,7 @@ export default async function Home() {
           </p>
           <a
             className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-white transition-colors hover:bg-primary/80 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
-            href="/dashboard"
+            href="/signup"
           >
             {home[0].callToActionText}
             <ArrowRightIcon className="ml-1 size-5" />

@@ -10,6 +10,7 @@
     "setup": "tsx -r dotenv/config scripts/setup.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.505.0",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
     "@langchain/core": "^0.1.20",

@@ -63,7 +63,7 @@ export default function Navbar() {
                 <li className="py-3">
                   <a
                     className="flex w-full items-center font-semibold text-primary"
-                    href="/sign-up"
+                    href="/pricing"
                   >
                     Get started <ArrowRightIcon className="ml-1 size-5" />
                   </a>
@@ -113,7 +113,7 @@ export default function Navbar() {
               Login
             </a>
             <a
-              href="/sign-up"
+              href="/pricing"
               className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
             >
               Get started <ArrowRightIcon className="ml-1 size-5" />
