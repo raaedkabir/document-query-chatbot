@@ -76,6 +76,17 @@ export const signOut = async (accessToken: string) =>
     })
   )
 
+export const refresh = async (refreshToken: string) =>
+  await cognitoClient.send(
+    new InitiateAuthCommand({
+      AuthFlow: 'REFRESH_TOKEN_AUTH',
+      AuthParameters: {
+        REFRESH_TOKEN: refreshToken,
+      },
+      ClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+    })
+  )
+
 export const forgotPassword = async (username: string) =>
   await cognitoClient.send(
     new ForgotPasswordCommand({
