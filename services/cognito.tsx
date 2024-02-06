@@ -3,6 +3,7 @@ import {
   ConfirmSignUpCommand,
   InitiateAuthCommand,
   SignUpCommand,
+  ResendConfirmationCodeCommand,
   GlobalSignOutCommand,
   GetUserCommand,
   ForgotPasswordCommand,
@@ -37,6 +38,14 @@ export const confirm = async (username: string, code: string) =>
     new ConfirmSignUpCommand({
       ClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
       ConfirmationCode: code,
+      Username: username,
+    })
+  )
+
+export const resendConfirmationCode = async (username: string) =>
+  await cognitoClient.send(
+    new ResendConfirmationCodeCommand({
+      ClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
       Username: username,
     })
   )

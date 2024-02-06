@@ -37,6 +37,22 @@ export default function SignupConfirm() {
     }
   }
 
+  async function handleResendConfirmationCode() {
+    const response = await fetch('/api/auth/resendConfirmationCode', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    })
+
+    const data = await response.json()
+
+    if (response.ok) {
+      toast.success('Sent a new verification code to your email.')
+    } else {
+      toast.error(data.message)
+    }
+  }
+
   // const signUpConfirm = await getSignUpConfirm()
 
   return (
@@ -52,7 +68,7 @@ export default function SignupConfirm() {
           <Transition
             appear
             show={t.visible}
-            className="flex transform rounded-xl bg-error text-white shadow-lg ring-1 ring-black ring-opacity-5"
+            className={`flex transform rounded-xl text-white shadow-lg ring-1 ring-black ring-opacity-5 ${t.type === 'success' ? 'bg-gray-dark' : 'bg-error'}`}
             enter="transition-all duration-150"
             enterFrom="opacity-0 scale-50"
             enterTo="opacity-100 scale-100"
@@ -131,6 +147,14 @@ export default function SignupConfirm() {
               <ul className="list-disc pl-4">
                 <li>Codes can take up to 5 minutes to arrive.</li>
                 <li>Check your spam folder.</li>
+                <li>
+                  <button
+                    onClick={handleResendConfirmationCode}
+                    className="text-primary underline"
+                  >
+                    Click here to send a new verification code.
+                  </button>
+                </li>
               </ul>
             </div>
           </div>
