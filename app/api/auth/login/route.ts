@@ -32,11 +32,15 @@ export async function POST(req: NextRequest) {
 
     const user = await getUser(AccessToken!)
 
+    cookies().set('UserId', user.Username || '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      path: '/',
+    })
+
     return NextResponse.json({
       message: 'Successfully logged in!',
-      userId: user.Username,
-      name: user.UserAttributes?.find((attr) => attr.Name === 'given_name')
-        ?.Value,
     })
   } catch (error: any) {
     return NextResponse.json(

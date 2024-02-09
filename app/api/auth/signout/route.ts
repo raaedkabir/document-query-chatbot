@@ -10,6 +10,7 @@ export async function POST(_req: NextRequest) {
       await signOut(accessToken.value)
     }
 
+    cookieStore.delete('UserId')
     cookieStore.delete('IdToken')
     cookieStore.delete('AccessToken')
     cookieStore.delete('RefreshToken')

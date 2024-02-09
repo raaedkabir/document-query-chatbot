@@ -9,6 +9,13 @@ import {
   ForgotPasswordCommand,
   ConfirmForgotPasswordCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
+import crypto from 'crypto'
+
+const generateSecretHash = (username: string) =>
+  crypto
+    .createHmac('SHA256', process.env.USER_POOL_CLIENT_SECRET!)
+    .update(username + process.env.USER_POOL_CLIENT_ID)
+    .digest('base64')
 
 const cognitoClient = new CognitoIdentityProviderClient({
   region: process.env.NEXT_PUBLIC_AWS_REGION,
@@ -21,7 +28,8 @@ export const signUp = async (
 ) =>
   await cognitoClient.send(
     new SignUpCommand({
-      ClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+      ClientId: process.env.USER_POOL_CLIENT_ID,
+      SecretHash: generateSecretHash(username),
       Username: username,
       Password: password,
       UserAttributes: [
@@ -36,7 +44,8 @@ export const signUp = async (
 export const confirm = async (username: string, code: string) =>
   await cognitoClient.send(
     new ConfirmSignUpCommand({
-      ClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+      ClientId: process.env.USER_POOL_CLIENT_ID,
+      SecretHash: generateSecretHash(username),
       ConfirmationCode: code,
       Username: username,
     })
@@ -45,7 +54,8 @@ export const confirm = async (username: string, code: string) =>
 export const resendConfirmationCode = async (username: string) =>
   await cognitoClient.send(
     new ResendConfirmationCodeCommand({
-      ClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+      ClientId: process.env.USER_POOL_CLIENT_ID,
+      SecretHash: generateSecretHash(username),
       Username: username,
     })
   )
@@ -57,8 +67,9 @@ export const login = async (username: string, password: string) =>
       AuthParameters: {
         USERNAME: username,
         PASSWORD: password,
+        SECRET_HASH: generateSecretHash(username),
       },
-      ClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+      ClientId: process.env.USER_POOL_CLIENT_ID,
     })
   )
 
@@ -76,21 +87,23 @@ export const signOut = async (accessToken: string) =>
     })
   )
 
-export const refresh = async (refreshToken: string) =>
+export const refresh = async (username: string, refreshToken: string) =>
   await cognitoClient.send(
     new InitiateAuthCommand({
       AuthFlow: 'REFRESH_TOKEN_AUTH',
       AuthParameters: {
         REFRESH_TOKEN: refreshToken,
+        SECRET_HASH: generateSecretHash(username),
       },
-      ClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+      ClientId: process.env.USER_POOL_CLIENT_ID,
     })
   )
 
 export const forgotPassword = async (username: string) =>
   await cognitoClient.send(
     new ForgotPasswordCommand({
-      ClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+      ClientId: process.env.USER_POOL_CLIENT_ID,
+      SecretHash: generateSecretHash(username),
       Username: username,
     })
   )
@@ -102,7 +115,8 @@ export const confirmForgotPassword = async (
 ) =>
   await cognitoClient.send(
     new ConfirmForgotPasswordCommand({
-      ClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+      ClientId: process.env.USER_POOL_CLIENT_ID,
+      SecretHash: generateSecretHash(username),
       ConfirmationCode: code,
       Username: username,
       Password: password,

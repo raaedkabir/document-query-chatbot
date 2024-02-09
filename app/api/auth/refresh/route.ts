@@ -5,11 +5,15 @@ import { refresh } from '@/services/cognito'
 export async function POST(_req: NextRequest) {
   try {
     const cookieStore = cookies()
+    const userId = cookieStore.get('UserId')
     const refreshToken = cookieStore.get('RefreshToken')
+    if (!userId) {
+      throw new Error('No user id found!')
+    }
     if (!refreshToken) {
       throw new Error('No refresh token found!')
     }
-    const sessionData = await refresh(refreshToken.value)
+    const sessionData = await refresh(userId.value, refreshToken.value)
     const { IdToken, AccessToken, ExpiresIn } =
       sessionData.AuthenticationResult!
 
