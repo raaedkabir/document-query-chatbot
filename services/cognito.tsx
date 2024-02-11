@@ -122,3 +122,22 @@ export const confirmForgotPassword = async (
       Password: password,
     })
   )
+
+/**
+ * If you want to use Cognito User's Identity ID, you can do so like this: 
+ * 
+ * import { CognitoIdentityClient } from '@aws-sdk/client-cognito-identity'
+ * import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
+
+ * const cognitoIdentity = new CognitoIdentityClient({
+ *   credentials: fromCognitoIdentityPool({
+ *     clientConfig: { region: process.env.NEXT_PUBLIC_AWS_REGION },
+ *     identityPoolId: process.env.NEXT_PUBLIC_IDENTITY_POOL_ID!,
+ *     logins: {
+ *       [process.env.NEXT_PUBLIC_USER_POOL_ENDPOINT!]: idToken,
+ *     },
+ *   }),
+ * })
+
+ * const credentials = await cognitoIdentity.config.credentials()
+ */

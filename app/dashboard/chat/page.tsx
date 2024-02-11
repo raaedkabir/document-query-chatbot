@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import useBreakpoints from '@/hooks/useBreakpoints'
 import { useChat } from 'ai/react'
 import Image from 'next/image'
@@ -15,12 +16,21 @@ import {
 import { useAppSelector } from '@/lib/store/hooks'
 
 export default function DashboardChat() {
+  const router = useRouter()
+  const fileName = useAppSelector((state) => state.users.fileName)
+  const userId = useAppSelector((state) => state.users.id)
+
+  // redirect to dashboard if no file name or user id
+  if (!fileName || !userId) {
+    router.replace('/dashboard')
+  }
+
+  const [isFileUrlReady, setIsFileUrlReady] = useState(false)
+  const [fileUrl, setFileUrl] = useState('https://example.com/')
   const [displayChat, setDisplayChat] = useState(true)
   const inputRef = useRef<HTMLInputElement>(null)
   const chatRef = useRef<HTMLInputElement>(null)
   const { isSm, isLg } = useBreakpoints()
-  const fileName = useAppSelector((state) => state.users.fileName)
-  const userId = useAppSelector((state) => state.users.id)
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
       initialMessages: [
@@ -48,6 +58,19 @@ export default function DashboardChat() {
       }
     }
   }, [messages])
+
+  useEffect(() => {
+    fetch('/api/files/get', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, fileName }),
+    })
+      .then((response) => response.json())
+      .then(({ data }) => {
+        setFileUrl(data)
+        setIsFileUrlReady(true)
+      })
+  }, [userId, fileName])
 
   const notify = () => toast('Copied to clipboard!')
 
@@ -98,7 +121,7 @@ export default function DashboardChat() {
         <div
           className={`col-span-9 h-screen lg:col-span-5 ${isLg ? 'block' : displayChat ? 'hidden' : 'block'}`}
         >
-          <PDFViewer />
+          <PDFViewer fileUrl={fileUrl} isFileUrlReady={isFileUrlReady} />
         </div>
 
         <div

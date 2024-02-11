@@ -9,10 +9,10 @@ type UsersState = {
 }
 
 const initialState = {
-  id: '12345',
+  id: '',
   name: '',
   email: '',
-  fileName: 'DocQA_Outline_V5.pdf',
+  fileName: '',
   uploadedFiles: [],
 } as UsersState
 

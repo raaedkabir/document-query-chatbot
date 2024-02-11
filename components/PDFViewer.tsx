@@ -1,4 +1,4 @@
-import { Viewer } from '@react-pdf-viewer/core'
+import { Viewer, Spinner } from '@react-pdf-viewer/core'
 import {
   pageNavigationPlugin,
   RenderCurrentPageLabelProps,
@@ -10,7 +10,13 @@ import { fullScreenPlugin } from '@react-pdf-viewer/full-screen'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
 
-export default function PDFViewer() {
+export default function PDFViewer({
+  fileUrl,
+  isFileUrlReady,
+}: {
+  fileUrl: string
+  isFileUrlReady: boolean
+}) {
   const pageNavigationPluginInstance = pageNavigationPlugin()
   const zoomPluginInstance = zoomPlugin()
   const rotatePluginInstance = rotatePlugin()
@@ -65,15 +71,21 @@ export default function PDFViewer() {
         </div>
       </div>
       <div className="flex-grow overflow-hidden">
-        <Viewer
-          fileUrl="/DocQA_Outline_V5.pdf"
-          plugins={[
-            pageNavigationPluginInstance,
-            zoomPluginInstance,
-            rotatePluginInstance,
-            fullScreenPluginInstance,
-          ]}
-        />
+        {isFileUrlReady ? (
+          <Viewer
+            fileUrl={fileUrl}
+            plugins={[
+              pageNavigationPluginInstance,
+              zoomPluginInstance,
+              rotatePluginInstance,
+              fullScreenPluginInstance,
+            ]}
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <Spinner />
+          </div>
+        )}
       </div>
     </div>
   )
