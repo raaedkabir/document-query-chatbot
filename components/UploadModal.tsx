@@ -2,15 +2,21 @@
 
 import { useState, Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import Uploader from './Uploader'
 
 export default function UploadModal({
   title,
-  children,
+  userId,
+  files,
 }: {
   title: string
-  children: React.ReactNode
+  userId: string
+  files: { name: string | undefined }[] | undefined
 }) {
+  // state for modal open/close
   const [isOpen, setIsOpen] = useState(false)
+  // prevent modal from closing while uploading
+  const [isUploading, setIsUploading] = useState(false)
 
   return (
     <>
@@ -25,7 +31,11 @@ export default function UploadModal({
           <Dialog
             as="div"
             className="relative z-40"
-            onClose={() => setIsOpen(false)}
+            onClose={() => {
+              if (!isUploading) {
+                setIsOpen(false)
+              }
+            }}
           >
             <Transition.Child
               as={Fragment}
@@ -57,7 +67,13 @@ export default function UploadModal({
                     >
                       {title}
                     </Dialog.Title>
-                    {children}
+                    <div className="mt-2">
+                      <Uploader
+                        userId={userId}
+                        files={files}
+                        setIsUploading={setIsUploading}
+                      />
+                    </div>
                   </Dialog.Panel>
                 </Transition.Child>
               </div>

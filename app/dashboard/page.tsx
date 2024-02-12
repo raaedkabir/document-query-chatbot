@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers'
 import UploadModal from '@/components/UploadModal'
-import Uploader from '@/components/Uploader'
 import UploadedFiles from '@/components/UploadedFiles'
 import { getUser } from '@/services/cognito'
 import { listObjects } from '@/services/storage'
@@ -53,11 +52,7 @@ export default async function Dashboard() {
             </h1>
             <div className="flex justify-between">
               <h2 className="text-center text-3xl font-bold">My Files</h2>
-              <UploadModal title="Upload PDF">
-                <div className="mt-2">
-                  <Uploader userId={userId} files={files} />
-                </div>
-              </UploadModal>
+              <UploadModal title="Upload PDF" userId={userId} files={files} />
             </div>
             <hr className="my-4 border-gray-dark/25" />
             <div className="flex flex-wrap">
