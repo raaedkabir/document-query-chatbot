@@ -2,19 +2,22 @@ import { OpenAIEmbeddings } from '@langchain/openai'
 import { PineconeStore } from '@langchain/pinecone'
 import { Pinecone } from '@pinecone-database/pinecone'
 import { Document } from '@langchain/core/documents'
+import { getPineconeClient } from './pinecone'
 
 /**
  * Embed the PDF documents into the Pinecone index
  * https://js.langchain.com/docs/integrations/vectorstores/pinecone#index-docs
  */
 export async function embed(
-  client: Pinecone,
   docs: Document<Record<string, any>>[],
   fileName: string,
   userId: string
 ) {
+  fileName = encodeURI(fileName)
+
   try {
-    const index = client.Index(process.env.PINECONE_INDEX_NAME!)
+    const pineconeClient = await getPineconeClient()
+    const index = pineconeClient.Index(process.env.PINECONE_INDEX_NAME!)
 
     // Add identifiers to the metadata
     docs.map((doc) => {
@@ -41,12 +44,11 @@ export async function embed(
  * Delete the PDF documents from the Pinecone index
  * https://js.langchain.com/docs/integrations/vectorstores/pinecone#delete-docs
  */
-export async function deleteEmbed(
-  client: Pinecone,
-  fileName: string,
-  userId: string
-) {
-  const pineconeIndex = client.Index(process.env.PINECONE_INDEX_NAME!)
+export async function deleteEmbed(fileName: string, userId: string) {
+  fileName = encodeURI(fileName)
+
+  const pineconeClient = await getPineconeClient()
+  const pineconeIndex = pineconeClient.Index(process.env.PINECONE_INDEX_NAME!)
   const pineconeStore = new PineconeStore(new OpenAIEmbeddings(), {
     pineconeIndex,
     namespace: `${userId}-${fileName}`,
@@ -70,6 +72,8 @@ export async function getVectorStore(
   fileName: string,
   userId: string
 ) {
+  fileName = encodeURI(fileName)
+
   try {
     const index = client.Index(process.env.PINECONE_INDEX_NAME!)
 

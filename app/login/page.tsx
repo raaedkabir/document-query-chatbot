@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, FormEvent } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import toast, { Toaster, resolveValue } from 'react-hot-toast'
 import { Transition } from '@headlessui/react'
@@ -175,12 +176,12 @@ export default function Login() {
                   <div>
                     <div className="flex items-center justify-end">
                       <div className="text-sm">
-                        <a
+                        <Link
                           href="/login/reset"
                           className="font-semibold text-primary hover:text-primary/80"
                         >
                           Forgot Password?
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -213,12 +214,12 @@ export default function Login() {
           <div>
             <p className="mb-24 text-center text-gray-dark">
               Don&apos;t have an account?{' '}
-              <a
+              <Link
                 href="/signup"
                 className="font-semibold leading-6 text-primary hover:text-primary/80"
               >
                 Register
-              </a>
+              </Link>
             </p>
           </div>
         </div>

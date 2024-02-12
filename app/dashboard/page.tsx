@@ -1,21 +1,22 @@
+import { Suspense } from 'react'
 import { cookies } from 'next/headers'
-import UploadModal from '@/components/UploadModal'
-import UploadedFiles from '@/components/UploadedFiles'
+import UploadModal from '@/components/Dashboard/UploadModal'
+import UploadedFiles from '@/components/Dashboard/UploadedFiles'
 import { getUser } from '@/services/cognito'
 import { listObjects } from '@/services/storage'
 
 export default async function Dashboard() {
-  const accessToken = cookies().get('AccessToken')!
-  const idToken = cookies().get('IdToken')!
+  const accessToken = cookies().get('AccessToken')?.value!
+  const idToken = cookies().get('IdToken')?.value!
 
-  const userDetails = await getUser(accessToken.value)
+  const userDetails = await getUser(accessToken)
 
   const userId =
     userDetails.UserAttributes?.find(
       (userAttribute) => userAttribute.Name === 'sub'
     )?.Value || ''
 
-  const response = await listObjects(idToken.value, `users/${userId}/`)
+  const response = await listObjects(idToken, `users/${userId}/uploads/`)
 
   const files = response.Contents
     // Sort files by LastModified date
@@ -32,7 +33,7 @@ export default async function Dashboard() {
     // Map files to get only the file name
     ?.map((file) => {
       return {
-        name: file.Key?.replace(`users/${userId}/`, ''),
+        name: file.Key?.replace(`users/${userId}/uploads/`, ''),
         uploadDate: file.LastModified,
         formattedUploadDate: new Date(
           file.LastModified || ''
@@ -56,7 +57,9 @@ export default async function Dashboard() {
             </div>
             <hr className="my-4 border-gray-dark/25" />
             <div className="flex flex-wrap">
-              <UploadedFiles userId={userId} files={files} />
+              <Suspense fallback={<div>Loading...</div>}>
+                <UploadedFiles userId={userId} />
+              </Suspense>
             </div>
           </div>
         </div>

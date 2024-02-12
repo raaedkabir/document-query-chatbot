@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const idToken = cookies().get('IdToken')!
     const data = await createMultipartUpload(
       idToken.value,
-      `users/${userId}/${fileName}`
+      `users/${userId}/uploads/${fileName}`
     )
 
     return NextResponse.json({

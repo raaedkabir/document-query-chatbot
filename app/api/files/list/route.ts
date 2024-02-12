@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   try {
     const { userId } = await req.json()
     const idToken = cookies().get('IdToken')!
-    const data = await listObjects(idToken.value, `users/${userId}/`)
+    const data = await listObjects(idToken.value, `users/${userId}/uploads/`)
 
     return NextResponse.json({
       message: 'Successfully retrieved files!',

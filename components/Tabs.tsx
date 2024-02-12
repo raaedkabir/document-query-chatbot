@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Tabs() {
   const [openTab, setOpenTab] = useState(1)
@@ -36,12 +37,12 @@ export default function Tabs() {
             </span>
             <span className="mt-2 text-gray-dark">
               Either starting out with a free plan or choose our{' '}
-              <a
+              <Link
                 className="text-primary underline underline-offset-2"
                 href="/pricing"
               >
                 pro plan
-              </a>
+              </Link>
               .
             </span>
           </div>

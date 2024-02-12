@@ -4,9 +4,8 @@ import { refresh } from '@/services/cognito'
 
 export async function POST(_req: NextRequest) {
   try {
-    const cookieStore = cookies()
-    const userId = cookieStore.get('UserId')
-    const refreshToken = cookieStore.get('RefreshToken')
+    const userId = cookies().get('UserId')
+    const refreshToken = cookies().get('RefreshToken')
     if (!userId) {
       throw new Error('No user id found!')
     }

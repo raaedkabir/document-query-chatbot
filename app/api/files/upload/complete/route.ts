@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
 
     const data = await completeMultipartUpload(
       idToken.value,
-      `users/${userId}/${fileName}`,
+      `users/${userId}/uploads/${fileName}`,
       uploadId,
       parts
     )

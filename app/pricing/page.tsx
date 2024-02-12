@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import {
   ArrowRightIcon,
   CheckIcon,
@@ -21,6 +22,21 @@ export default async function Pricing() {
     }
   }
 
+  let cols
+  switch (pricing[0].pricingPlans.length) {
+    case 4:
+      cols = 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-4'
+      break
+    case 3:
+      cols = 'grid-cols-1 lg:grid-cols-3'
+      break
+    case 2:
+      cols = 'grid-cols-1 lg:grid-cols-2'
+      break
+    default:
+      cols = 'grid-cols-1'
+  }
+
   return (
     <>
       <Navbar />
@@ -32,13 +48,11 @@ export default async function Pricing() {
             </h1>
             <p className="mt-5 sm:text-lg">{pricing[0].description}</p>
           </div>
-          <div
-            className={`grid grid-cols-1 gap-10 py-12 ${'lg:grid-cols-' + pricing[0].pricingPlans.length}`}
-          >
+          <div className={`grid gap-10 py-12 ${cols}`}>
             {pricing[0].pricingPlans.map((pricingPlan) => (
               <div
                 key={pricingPlan.header}
-                className={`relative rounded-2xl border ${pricingPlan.feature ? 'border-2 border-primary shadow-secondary' : 'border-gray-light'} bg-white shadow-lg`}
+                className={`relative rounded-2xl border ${pricingPlan.feature ? 'border-2 border-primary shadow-secondary' : 'border-gray-light'} col-span-1 bg-white shadow-lg`}
               >
                 {pricingPlan.feature && pricingPlan.featureText && (
                   <div className="absolute inset-x-0 -top-5 mx-auto w-fit rounded-full bg-gradient-to-r from-primary to-secondary px-3 py-2 text-sm font-medium text-white">
@@ -72,15 +86,18 @@ export default async function Pricing() {
                     </li>
                   ))}
                 </ul>
-                <div className="border-t border-gray-light"></div>
+                <div className="border-t border-gray-light" />
                 <div className="p-5">
-                  <a
+                  <Link
                     className={`inline-flex h-10 w-full items-center justify-center rounded-md ${pricingPlan.feature ? 'bg-primary text-white hover:bg-primary/80' : 'bg-gray-light hover:bg-gray-light/80'} px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50`}
-                    href="/signup"
+                    href={{
+                      pathname: '/signup',
+                      query: { planType: pricingPlan.header.toLowerCase() },
+                    }}
                   >
                     {pricingPlan.callToActionText}
                     <ArrowRightIcon className="ml-1 size-5" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}

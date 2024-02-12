@@ -14,6 +14,16 @@ import type {
   UploadPartCommandOutput,
 } from '@aws-sdk/client-s3'
 
+type InitiateUploadResponse = {
+  message: string
+  data: CreateMultipartUploadCommandOutput
+}
+
+type PartUploadResponse = {
+  message: string
+  data: UploadPartCommandOutput
+}
+
 export default function Uploader({
   userId,
   files,
@@ -95,10 +105,7 @@ export default function Uploader({
               })
               const {
                 data: { UploadId },
-              } = (await response.json()) as {
-                message: string
-                data: CreateMultipartUploadCommandOutput
-              }
+              }: InitiateUploadResponse = await response.json()
 
               // upload parts
               const uploadedParts: { ETag: string; PartNumber: number }[] = []
@@ -119,14 +126,8 @@ export default function Uploader({
                   method: 'POST',
                   body: formData,
                 })
-                  .then(
-                    (response) =>
-                      response.json() as Promise<{
-                        message: string
-                        data: UploadPartCommandOutput
-                      }>
-                  )
-                  .then((data) => {
+                  .then((response) => response.json())
+                  .then((data: PartUploadResponse) => {
                     uploadedParts.push({
                       ETag: data.data.ETag!,
                       PartNumber: index + 1,

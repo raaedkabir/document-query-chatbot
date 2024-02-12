@@ -7,7 +7,7 @@ import { useChat } from 'ai/react'
 import Image from 'next/image'
 import toast, { Toaster, resolveValue } from 'react-hot-toast'
 import { Transition } from '@headlessui/react'
-import PDFViewer from '@/components/PDFViewer'
+import PDFViewer from '@/components/Dashboard/PDFViewer'
 import {
   ArrowRightIcon,
   ArrowPathIcon,

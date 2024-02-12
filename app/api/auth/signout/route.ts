@@ -4,16 +4,15 @@ import { signOut } from '@/services/cognito'
 
 export async function POST(_req: NextRequest) {
   try {
-    const cookieStore = cookies()
-    const accessToken = cookieStore.get('AccessToken')
+    const accessToken = cookies().get('AccessToken')
     if (accessToken) {
-      await signOut(accessToken.value)
+      signOut(accessToken.value)
     }
 
-    cookieStore.delete('UserId')
-    cookieStore.delete('IdToken')
-    cookieStore.delete('AccessToken')
-    cookieStore.delete('RefreshToken')
+    cookies().delete('UserId')
+    cookies().delete('IdToken')
+    cookies().delete('AccessToken')
+    cookies().delete('RefreshToken')
 
     return NextResponse.json({
       message: 'Successfully signed out!',

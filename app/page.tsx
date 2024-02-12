@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
@@ -19,13 +20,13 @@ export default async function Home() {
           <p className="mt-5 max-w-prose text-gray-dark sm:text-lg">
             {home[0].description}
           </p>
-          <a
+          <Link
             className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-white transition-colors hover:bg-primary/80 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
-            href="/signup"
+            href="/pricing"
           >
             {home[0].callToActionText}
             <ArrowRightIcon className="ml-1 size-5" />
-          </a>
+          </Link>
         </div>
         <div className="mx-auto max-w-6xl px-6 lg:px-8">
           <div className="mt-16 flow-root sm:mt-24">

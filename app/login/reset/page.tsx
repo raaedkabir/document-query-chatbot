@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import toast, { Toaster, resolveValue } from 'react-hot-toast'
 import { Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -114,7 +115,7 @@ export default function LoginReset() {
 
                   <div>
                     <p className="text-sm text-primary">
-                      <a href="/login">Back to login</a>
+                      <Link href="/login">Back to login</Link>
                     </p>
                   </div>
                 </form>

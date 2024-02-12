@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 
 export default function Navbar() {
@@ -19,9 +20,9 @@ export default function Navbar() {
     <nav className="sticky inset-x-0 top-0 z-30 h-14 w-full border-b border-gray-dark/25 bg-white/75 backdrop-blur-lg transition-all">
       <div className="mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
         <div className="flex h-14 items-center justify-between">
-          <a className="z-50 flex font-semibold" href="/">
+          <Link className="z-50 flex font-semibold" href="/">
             <span>Bento DocQA</span>
-          </a>
+          </Link>
           <button
             onClick={handleClick}
             className="z-50 flex flex-col items-center justify-center sm:hidden"
@@ -61,63 +62,63 @@ export default function Navbar() {
             <div className="fixed inset-0 w-full">
               <ul className="grid grid-cols-1 divide-y px-10 pb-8 pt-20">
                 <li className="py-3">
-                  <a
+                  <Link
                     className="flex w-full items-center font-semibold text-primary"
                     href="/pricing"
                   >
                     Get started <ArrowRightIcon className="ml-1 size-5" />
-                  </a>
+                  </Link>
                 </li>
                 <li className="py-3">
-                  <a
+                  <Link
                     className="flex w-full items-center font-semibold"
                     href="/login"
                   >
                     Login
-                  </a>
+                  </Link>
                 </li>
                 <li className="py-3">
-                  <a
+                  <Link
                     className="flex w-full items-center font-semibold"
                     href="/pricing"
                   >
                     Pricing
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
           </aside>
           <div className="hidden items-center space-x-4 sm:flex">
-            <a
+            <Link
               href="/"
               className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-gray-light/80 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
             >
               Home
-            </a>
-            <a
+            </Link>
+            <Link
               href="/contact"
               className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-gray-light/80 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
             >
               Contact
-            </a>
-            <a
+            </Link>
+            <Link
               className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-gray-light/80 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
               href="/pricing"
             >
               Pricing
-            </a>
-            <a
+            </Link>
+            <Link
               href="/login"
               className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors hover:bg-gray-light/80 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
             >
               Login
-            </a>
-            <a
+            </Link>
+            <Link
               href="/pricing"
               className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
             >
               Get started <ArrowRightIcon className="ml-1 size-5" />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

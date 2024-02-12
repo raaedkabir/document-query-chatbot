@@ -1,6 +1,6 @@
 export default function GoogleSignIn() {
   return (
-    <a href={process.env.NEXT_PUBLIC_GOOGLE_SIGN_IN_URL}>
+    <a href={process.env.NEXT_PUBLIC_OAUTH_LOGIN_URL + 'Google'}>
       <svg
         className="size-10 rounded bg-gray-light p-2.5 text-gray-dark"
         aria-hidden="true"

@@ -6,7 +6,10 @@ export async function POST(req: NextRequest) {
   try {
     const { userId, fileName } = await req.json()
     const idToken = cookies().get('IdToken')!
-    const data = await getS3Object(idToken.value, `users/${userId}/${fileName}`)
+    const data = await getS3Object(
+      idToken.value,
+      `users/${userId}/uploads/${fileName}`
+    )
 
     return NextResponse.json({
       message: 'Successfully retrieved files!',

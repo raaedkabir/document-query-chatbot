@@ -1,6 +1,6 @@
 export default function FacebookLogin() {
   return (
-    <a href={process.env.NEXT_PUBLIC_FACEBOOK_LOGIN_URL}>
+    <a href={process.env.NEXT_PUBLIC_OAUTH_LOGIN_URL + 'Facebook'}>
       <svg
         className="size-10 rounded bg-gray-light p-2.5 text-gray-dark"
         aria-hidden="true"
