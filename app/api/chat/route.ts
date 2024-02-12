@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Message } from 'ai'
-import { queryDocument } from '@/lib/langchain'
+import { queryDocument } from '@/services/langchain'
 
 const formatChatHistory = (message: Message) =>
   `${message.role === 'assistant' ? 'Assistant' : 'Human'}: ${message.content}`

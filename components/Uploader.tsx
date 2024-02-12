@@ -7,7 +7,7 @@ import { DocumentIcon } from '@heroicons/react/24/outline'
 import { getDocument } from 'pdfjs-dist'
 import { useAppStore } from '@/lib/store/hooks'
 import { setFileName, setId } from '@/lib/store/features/users/usersSlice'
-import { chunkFileForS3 } from '@/lib/utils/getChunks'
+import { chunkFileForS3, chunkFileForPinecone } from '@/lib/utils/getChunks'
 import type {
   CreateMultipartUploadCommandOutput,
   UploadPartCommandOutput,
@@ -99,7 +99,7 @@ export default function Uploader({
                 formData.append('fileName', file.name)
                 formData.append(
                   'body',
-                  new Blob([chunk.buffer], { type: 'application/pdf' })
+                  new Blob([chunk], { type: 'application/pdf' })
                 )
                 formData.append('uploadId', UploadId!)
                 formData.append('partNumber', (index + 1).toString())
@@ -133,7 +133,21 @@ export default function Uploader({
                 }),
               })
 
-              // TODO: upload to Pinecone
+              /**
+               * Upload file to Pinecone
+               */
+
+              const pineconeChunks = await chunkFileForPinecone(
+                new Blob([typedArray], { type: 'application/pdf' })
+              )
+
+              for (const chunk of pineconeChunks) {
+                await fetch('/api/pinecone/upload', {
+                  method: 'POST',
+                  body: JSON.stringify({ userId, fileName: file.name, chunk }),
+                })
+              }
+
               store.dispatch(setFileName(file.name))
               store.dispatch(setId(userId))
               router.push('/dashboard/chat')
