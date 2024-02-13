@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Montserrat, Nunito } from 'next/font/google'
 import './globals.css'
+import CookieConsent from '@/components/CookieConsent'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -23,7 +24,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${montserrat.variable} ${nunito.variable}`}>
-      <body className="min-h-screen bg-gray-light">{children}</body>
+      <body className="min-h-screen bg-gray-light">
+        {children}
+        <CookieConsent />
+      </body>
     </html>
   )
 }
