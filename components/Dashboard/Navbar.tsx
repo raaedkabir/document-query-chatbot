@@ -19,10 +19,12 @@ function NavbarWithNoSSR({
   chatHistory,
   // profilePicture,
   givenName,
+  userId,
 }: {
   chatHistory: any[]
   // profilePicture: string
   givenName: string
+  userId: string
 }) {
   const router = useRouter()
   const { isSm, isLg } = useBreakpoints()
@@ -114,7 +116,7 @@ function NavbarWithNoSSR({
                   </Link>
                   <hr className="my-4 border-gray-dark/25" />
                   <p className="mb-2 text-xl text-gray-dark">Chat History</p>
-                  <ChatHistory chatHistory={chatHistory} />
+                  <ChatHistory chatHistory={chatHistory} userId={userId} />
                 </div>
                 <div className="text-center font-bold">{givenName}</div>
                 <div className="flex items-end gap-1 text-center">

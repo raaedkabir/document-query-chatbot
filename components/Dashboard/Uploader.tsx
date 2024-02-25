@@ -1,7 +1,8 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useContext } from 'react'
 import { useRouter } from 'next/navigation'
+import { PreventCloseContext } from '../UI/Dialog'
 import { useDropzone } from 'react-dropzone'
 import { DocumentIcon } from '@heroicons/react/24/outline'
 import { getDocument } from 'pdfjs-dist'
@@ -13,6 +14,7 @@ import type {
   CreateMultipartUploadCommandOutput,
   UploadPartCommandOutput,
 } from '@aws-sdk/client-s3'
+import { putNewChat } from '@/services/dynamodb'
 
 type InitiateUploadResponse = {
   message: string
@@ -27,12 +29,13 @@ type PartUploadResponse = {
 export default function Uploader({
   userId,
   files,
-  setIsUploading,
 }: {
   userId: string
   files: { name: string | undefined }[] | undefined
-  setIsUploading: (isUploading: boolean) => void
 }) {
+  // prevent modal from closing while uploading
+  const { setPreventClose } = useContext(PreventCloseContext)
+
   const [isLoading, setIsLoading] = useState(false)
   const [loadingProgress, setLoadingProgress] = useState(0)
   const [loadingMessage, setLoadingMessage] = useState('')
@@ -89,7 +92,7 @@ export default function Uploader({
                 'File already uploaded. Please upload a different file or rename the file'
               )
             } else {
-              setIsUploading(true)
+              setPreventClose(true)
               setIsLoading(true)
 
               /**
@@ -168,6 +171,9 @@ export default function Uploader({
                 setLoadingProgress((count++ / pineconeChunks.length) * 100) // update progress
               }
 
+              // write to DynamoDB
+              const chatId = await putNewChat(userId, file.name)
+
               /**
                * Write to Redux store
                * and redirect to chat page
@@ -177,7 +183,7 @@ export default function Uploader({
               store.dispatch(setFileName(file.name))
               store.dispatch(setId(userId))
 
-              router.push('/dashboard/chat')
+              router.push(`/dashboard/chat?chat_id=${chatId}`)
             }
           })
         }

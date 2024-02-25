@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { getUser } from '@/services/cognito'
+import { getChats } from '@/services/dynamodb'
 import NavbarWithNoSSR from '@/components/Dashboard/Navbar'
 
 export default async function NavbarWrapper() {
@@ -7,10 +8,23 @@ export default async function NavbarWrapper() {
 
   const userDetails = await getUser(accessToken)
 
+  const userId =
+    userDetails.UserAttributes?.find(
+      (userAttribute) => userAttribute.Name === 'sub'
+    )?.Value || ''
+
   const givenName =
     userDetails.UserAttributes?.find(
       (userAttribute) => userAttribute.Name === 'given_name'
     )?.Value || ''
 
-  return <NavbarWithNoSSR chatHistory={[]} givenName={givenName} />
+  const { Items: ChatHistoryTableItems } = await getChats(userId)
+
+  return (
+    <NavbarWithNoSSR
+      chatHistory={ChatHistoryTableItems}
+      givenName={givenName}
+      userId={userId}
+    />
+  )
 }
