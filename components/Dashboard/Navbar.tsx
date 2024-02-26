@@ -137,7 +137,7 @@ function NavbarWithNoSSR({
                       Sign Out
                     </button>
                   </div>
-                  <Link href="/dashboard/faq" className="ml-auto">
+                  <Link href="/dashboard/help" className="ml-auto">
                     <QuestionMarkCircleIcon className="mx-auto size-10" />
                   </Link>
                 </div>

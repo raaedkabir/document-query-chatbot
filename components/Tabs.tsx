@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 
 export default function Tabs() {
   const [openTab, setOpenTab] = useState(1)
@@ -36,14 +35,7 @@ export default function Tabs() {
               Sign up for an account
             </span>
             <span className="mt-2 text-gray-dark">
-              Either starting out with a free plan or choose our{' '}
-              <Link
-                className="text-primary underline underline-offset-2"
-                href="/pricing"
-              >
-                pro plan
-              </Link>
-              .
+              Either starting out with a free plan or choose our pro plan.
             </span>
           </div>
         </li>
