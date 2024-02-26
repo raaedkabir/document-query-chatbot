@@ -29,8 +29,8 @@
     "@sanity/image-url": "^1.0.2",
     "@sanity/vision": "^3.24.1",
     "ai": "^2.2.32",
-    "langchain": "^0.1.10",
-    "next": "14.0.4",
+    "langchain": "^0.1.22",
+    "next": "14.1.0",
     "next-sanity": "^7.0.9",
     "openai": "^4.26.0",
     "pdf-parse": "^1.1.1",
@@ -43,6 +43,7 @@
     "react-popper": "^2.3.0",
     "react-redux": "^9.1.0",
     "sanity": "^3.24.1",
+    "sharp": "^0.33.2",
     "styled-components": "^6.1.8",
     "swr": "^2.2.5"
   },

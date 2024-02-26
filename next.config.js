@@ -27,6 +27,9 @@ const nextConfig = {
 
     return config
   },
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
 }
 
 module.exports = nextConfig
