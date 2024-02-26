@@ -4,6 +4,8 @@ import cookieConsent from './schemas/cookie-consent-schema'
 import pricingSchema from './schemas/pricing-schema'
 import pricingPlanSchema from './schemas/pricing-plan-schema'
 import planDetailSchema from './schemas/plan-detail-schema'
+import privacySchema from './schemas/privacy-schema'
+import termsSchema from './schemas/terms-schema'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -12,5 +14,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     pricingSchema,
     pricingPlanSchema,
     planDetailSchema,
+    privacySchema,
+    termsSchema,
   ],
 }
