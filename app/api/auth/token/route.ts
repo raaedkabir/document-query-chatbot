@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     const { code } = await req.json()
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_USER_POOL_DOMAIN_URL}/oauth2/token`,
+      `${process.env.USER_POOL_DOMAIN_URL}/oauth2/token`,
       {
         method: 'POST',
         headers: {

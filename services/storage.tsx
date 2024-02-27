@@ -12,12 +12,12 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 const getS3Client = (idToken: string) =>
   new S3Client({
-    region: process.env.NEXT_PUBLIC_AWS_REGION,
+    region: process.env.AWS_DEPLOYMENT_REGION,
     credentials: fromCognitoIdentityPool({
-      clientConfig: { region: process.env.NEXT_PUBLIC_AWS_REGION },
-      identityPoolId: process.env.NEXT_PUBLIC_IDENTITY_POOL_ID!,
+      clientConfig: { region: process.env.AWS_DEPLOYMENT_REGION },
+      identityPoolId: process.env.IDENTITY_POOL_ID!,
       logins: {
-        [process.env.NEXT_PUBLIC_USER_POOL_ENDPOINT!]: idToken,
+        [process.env.USER_POOL_ENDPOINT!]: idToken,
       },
     }),
   })
@@ -26,7 +26,7 @@ export const listObjects = async (idToken: string, prefix: string) => {
   const client = getS3Client(idToken)
 
   const command = new ListObjectsV2Command({
-    Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+    Bucket: process.env.BUCKET_NAME,
     Prefix: prefix,
   })
 
@@ -37,7 +37,7 @@ export const getS3Object = async (idToken: string, key: string) => {
   const client = getS3Client(idToken)
 
   const command = new GetObjectCommand({
-    Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+    Bucket: process.env.BUCKET_NAME,
     Key: key,
   })
 
@@ -50,7 +50,7 @@ export const deleteS3Object = async (idToken: string, key: string) => {
   const client = getS3Client(idToken)
 
   const command = new DeleteObjectCommand({
-    Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+    Bucket: process.env.BUCKET_NAME,
     Key: key,
   })
 
@@ -61,7 +61,7 @@ export const createMultipartUpload = async (idToken: string, key: string) => {
   const client = getS3Client(idToken)
 
   const command = new CreateMultipartUploadCommand({
-    Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+    Bucket: process.env.BUCKET_NAME,
     Key: key,
     ContentType: 'application/pdf',
   })
@@ -79,7 +79,7 @@ export const uploadPart = async (
   const client = getS3Client(idToken)
 
   const command = new UploadPartCommand({
-    Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+    Bucket: process.env.BUCKET_NAME,
     Key: key,
     Body: body,
     UploadId: uploadId,
@@ -98,7 +98,7 @@ export const completeMultipartUpload = async (
   const client = getS3Client(idToken)
 
   const command = new CompleteMultipartUploadCommand({
-    Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+    Bucket: process.env.BUCKET_NAME,
     Key: key,
     UploadId: uploadId,
     MultipartUpload: {
