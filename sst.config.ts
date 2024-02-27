@@ -1,5 +1,6 @@
 import { SSTConfig } from 'sst'
 import { NextjsSite } from 'sst/constructs'
+import { Certificate } from 'aws-cdk-lib/aws-certificatemanager'
 
 export default {
   config(_input) {
@@ -11,6 +12,17 @@ export default {
   stacks(app) {
     app.stack(function Site({ stack }) {
       const site = new NextjsSite(stack, 'site', {
+        customDomain: {
+          domainName: process.env.DOMAIN_NAME!,
+          isExternalDomain: true,
+          cdk: {
+            certificate: Certificate.fromCertificateArn(
+              stack,
+              'MyCert',
+              process.env.ACM_CERTIFICATE_ARN!
+            ),
+          },
+        },
         environment: {
           OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
           PINECONE_API_KEY: process.env.PINECONE_API_KEY!,
