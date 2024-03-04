@@ -12,9 +12,9 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 const getS3Client = (idToken: string) =>
   new S3Client({
-    region: process.env.AWS_DEPLOYMENT_REGION,
+    region: process.env.AWS_REGION,
     credentials: fromCognitoIdentityPool({
-      clientConfig: { region: process.env.AWS_DEPLOYMENT_REGION },
+      clientConfig: { region: process.env.AWS_REGION },
       identityPoolId: process.env.IDENTITY_POOL_ID!,
       logins: {
         [process.env.USER_POOL_ENDPOINT!]: idToken,

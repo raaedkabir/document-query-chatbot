@@ -18,7 +18,7 @@ const generateSecretHash = (username: string) =>
     .digest('base64')
 
 const cognitoClient = new CognitoIdentityProviderClient({
-  region: process.env.AWS_DEPLOYMENT_REGION,
+  region: process.env.AWS_REGION,
 })
 
 export const signUp = async (
@@ -136,7 +136,7 @@ export const confirmForgotPassword = async (
 
  * const cognitoIdentity = new CognitoIdentityClient({
  *   credentials: fromCognitoIdentityPool({
- *     clientConfig: { region: process.env.AWS_DEPLOYMENT_REGION },
+ *     clientConfig: { region: process.env.AWS_REGION },
  *     identityPoolId: process.env.IDENTITY_POOL_ID!,
  *     logins: {
  *       [process.env.USER_POOL_ENDPOINT!]: idToken,

@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "docker:build": "docker build -t nextjs-docker .",
+    "docker:run": "docker run -p 3000:3000 nextjs-docker",
     "setup": "tsx -r dotenv/config scripts/setup.ts"
   },
   "dependencies": {
