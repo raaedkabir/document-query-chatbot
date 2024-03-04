@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, createContext, Fragment } from 'react'
+import { useState, useEffect, createContext, Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 
 export const PreventCloseContext = createContext({
@@ -21,6 +21,20 @@ export default function UploadModal({
 }) {
   // prevent modal from closing while uploading
   const [preventClose, setPreventClose] = useState(false)
+
+  // prevent navigation away from page while uploading
+  useEffect(() => {
+    function handler(e: BeforeUnloadEvent) {
+      if (!preventClose) return
+      e.preventDefault()
+    }
+
+    window.addEventListener('beforeunload', handler)
+
+    return () => {
+      window.removeEventListener('beforeunload', handler)
+    }
+  }, [preventClose])
 
   return (
     <PreventCloseContext.Provider value={{ preventClose, setPreventClose }}>
