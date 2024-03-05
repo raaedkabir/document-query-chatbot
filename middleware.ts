@@ -40,7 +40,7 @@ export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
 
   if (searchParams.has('code')) {
-    const response = await fetch(new URL('/api/auth/token', request.url), {
+    const response = await fetch('https://www.mydocqa.com/api/auth/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +52,9 @@ export async function middleware(request: NextRequest) {
       await response.json()
 
     if (response.ok) {
-      const response = NextResponse.redirect(new URL('/dashboard', request.url))
+      const response = NextResponse.redirect(
+        'https://www.mydocqa.com/dashboard'
+      )
 
       response.cookies.set({
         name: 'UserId',
@@ -96,13 +98,13 @@ export async function middleware(request: NextRequest) {
 
   if (pathname.startsWith('/dashboard')) {
     if (!request.cookies.has('RefreshToken')) {
-      return NextResponse.redirect(new URL('/login', request.url))
+      return NextResponse.redirect('https://www.mydocqa.com/login')
     }
 
     const refreshToken = request.cookies.get('RefreshToken')!
     const userId = request.cookies.get('UserId')!
 
-    const response = await fetch(new URL('/api/auth/refresh', request.url), {
+    const response = await fetch('https://www.mydocqa.com/api/auth/refresh', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -138,7 +140,7 @@ export async function middleware(request: NextRequest) {
 
       return response
     } else {
-      const response = NextResponse.redirect(new URL('/login', request.url))
+      const response = NextResponse.redirect('https://www.mydocqa.com/login')
 
       response.cookies.delete('UserId')
       response.cookies.delete('IdToken')
