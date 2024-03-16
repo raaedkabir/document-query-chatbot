@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
           grant_type: 'authorization_code',
           client_id: process.env.USER_POOL_CLIENT_ID!,
           code,
-          redirect_uri: 'http://localhost:3000/',
+          redirect_uri: process.env.DOMAIN_NAME!,
         }),
       }
     )
