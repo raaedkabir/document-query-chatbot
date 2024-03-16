@@ -1,46 +1,14 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import {
-  ResponseCookies,
-  RequestCookies,
-} from 'next/dist/server/web/spec-extension/cookies'
-
-/**
- * Copy cookies from the Set-Cookie header of the response to the Cookie header of the request,
- * so that it will appear to SSR/RSC as if the user already has the new cookies.
- * https://github.com/vercel/next.js/discussions/50374
- */
-function applySetCookie(req: NextRequest, res: NextResponse) {
-  // 1. Parse Set-Cookie header from the response
-  const setCookies = new ResponseCookies(res.headers)
-
-  // 2. Construct updated Cookie header for the request
-  const newReqHeaders = new Headers(req.headers)
-  const newReqCookies = new RequestCookies(newReqHeaders)
-  setCookies.getAll().forEach((cookie) => newReqCookies.set(cookie))
-
-  // 3. Set up the “request header overrides” (see https://github.com/vercel/next.js/pull/41380)
-  //    on a dummy response
-  // NextResponse.next will set x-middleware-override-headers / x-middleware-request-* headers
-  const dummyRes = NextResponse.next({ request: { headers: newReqHeaders } })
-
-  // 4. Copy the “request header overrides” headers from our dummy response to the real response
-  dummyRes.headers.forEach((value, key) => {
-    if (
-      key === 'x-middleware-override-headers' ||
-      key.startsWith('x-middleware-request-')
-    ) {
-      res.headers.set(key, value)
-    }
-  })
-}
+import { applySetCookie } from '@/lib/utils/applySetCookie'
 
 // https://nextjs.org/docs/app/building-your-application/authentication
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
 
   if (searchParams.has('code')) {
-    const response = await fetch('https://www.mydocqa.com/api/auth/token', {
+    console.info('POST [request]  /api/auth/token')
+    const response = await fetch(`${process.env.DOMAIN_NAME}/api/auth/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,15 +16,15 @@ export async function middleware(request: NextRequest) {
       body: JSON.stringify({ code: searchParams.get('code') }),
     })
 
-    const { user_id, id_token, access_token, refresh_token, expires_in } =
-      await response.json()
-
     if (response.ok) {
-      const response = NextResponse.redirect(
-        'https://www.mydocqa.com/dashboard'
+      const { user_id, id_token, access_token, refresh_token, expires_in } =
+        await response.json()
+
+      const dashboardResponse = NextResponse.redirect(
+        `${process.env.DOMAIN_NAME}/dashboard`
       )
 
-      response.cookies.set({
+      dashboardResponse.cookies.set({
         name: 'UserId',
         value: user_id,
         httpOnly: true,
@@ -65,7 +33,7 @@ export async function middleware(request: NextRequest) {
         path: '/',
       })
 
-      response.cookies.set({
+      dashboardResponse.cookies.set({
         name: 'IdToken',
         value: id_token,
         httpOnly: true,
@@ -74,7 +42,7 @@ export async function middleware(request: NextRequest) {
         path: '/',
       })
 
-      response.cookies.set({
+      dashboardResponse.cookies.set({
         name: 'AccessToken',
         value: access_token,
         httpOnly: true,
@@ -83,7 +51,7 @@ export async function middleware(request: NextRequest) {
         path: '/',
       })
 
-      response.cookies.set({
+      dashboardResponse.cookies.set({
         name: 'RefreshToken',
         value: refresh_token,
         httpOnly: true,
@@ -92,32 +60,43 @@ export async function middleware(request: NextRequest) {
         path: '/',
       })
 
-      return response
+      return dashboardResponse
+    } else {
+      console.error(
+        `POST [error]    /api/auth/token -- Status: ${response.status} | Status Text: ${response.statusText} | Response:`,
+        await response.json()
+      )
     }
   }
 
   if (pathname.startsWith('/dashboard')) {
     if (!request.cookies.has('RefreshToken')) {
-      return NextResponse.redirect('https://www.mydocqa.com/login')
+      return NextResponse.redirect(`${process.env.DOMAIN_NAME}/login`)
     }
 
     const refreshToken = request.cookies.get('RefreshToken')!
     const userId = request.cookies.get('UserId')!
 
-    const response = await fetch('https://www.mydocqa.com/api/auth/refresh', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: `RefreshToken=${refreshToken.value};UserId=${userId.value}`,
-      },
-    })
-
-    const { IdToken, AccessToken, ExpiresIn } = await response.json()
+    console.info('POST [request]  /api/auth/refresh')
+    const response = await fetch(
+      `${process.env.DOMAIN_NAME}/api/auth/refresh`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: `RefreshToken=${refreshToken.value};UserId=${userId.value}`,
+        },
+      }
+    )
 
     if (response.ok) {
-      const response = NextResponse.next()
+      console.info('POST [response] /api/auth/refresh')
 
-      response.cookies.set({
+      const { IdToken, AccessToken, ExpiresIn } = await response.json()
+
+      const nextResponse = NextResponse.next()
+
+      nextResponse.cookies.set({
         name: 'IdToken',
         value: IdToken,
         httpOnly: true,
@@ -126,7 +105,7 @@ export async function middleware(request: NextRequest) {
         path: '/',
       })
 
-      response.cookies.set({
+      nextResponse.cookies.set({
         name: 'AccessToken',
         value: AccessToken,
         httpOnly: true,
@@ -136,18 +115,25 @@ export async function middleware(request: NextRequest) {
       })
 
       // Apply those cookies to the request
-      applySetCookie(request, response)
+      applySetCookie(request, nextResponse)
 
-      return response
+      return nextResponse
     } else {
-      const response = NextResponse.redirect('https://www.mydocqa.com/login')
+      console.error(
+        `POST [error]    /api/auth/refresh -- Status: ${response.status} | Status Text: ${response.statusText} | Response:`,
+        await response.json()
+      )
 
-      response.cookies.delete('UserId')
-      response.cookies.delete('IdToken')
-      response.cookies.delete('AccessToken')
-      response.cookies.delete('RefreshToken')
+      const nextResponse = NextResponse.redirect(
+        `${process.env.DOMAIN_NAME}/login`
+      )
 
-      return response
+      nextResponse.cookies.delete('UserId')
+      nextResponse.cookies.delete('IdToken')
+      nextResponse.cookies.delete('AccessToken')
+      nextResponse.cookies.delete('RefreshToken')
+
+      return nextResponse
     }
   }
 

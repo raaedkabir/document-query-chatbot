@@ -6,6 +6,9 @@ export async function POST(req: NextRequest) {
   try {
     const { code } = await req.json()
 
+    console.info(
+      `POST [request]  ${process.env.USER_POOL_DOMAIN_URL}/oauth2/token`
+    )
     const response = await fetch(
       `${process.env.USER_POOL_DOMAIN_URL}/oauth2/token`,
       {
@@ -23,7 +26,13 @@ export async function POST(req: NextRequest) {
       }
     )
 
-    if (!response.ok) throw new Error('Failed to get tokens!')
+    if (!response.ok) {
+      console.error(
+        `POST [error]    ${process.env.USER_POOL_DOMAIN_URL}/oauth2/token -- Status: ${response.status} | Status Text: ${response.statusText} | Response:`,
+        await response.json()
+      )
+      throw new Error('Failed to get tokens!')
+    }
 
     const { id_token, access_token, refresh_token, expires_in } =
       await response.json()
