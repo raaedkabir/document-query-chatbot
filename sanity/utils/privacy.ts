@@ -14,6 +14,12 @@ export async function getPrivacy(): Promise<Privacy[]> {
       header,
       description,
       content
-    }`
+    }`,
+    {},
+    {
+      next: {
+        revalidate: 0,
+      },
+    }
   )
 }

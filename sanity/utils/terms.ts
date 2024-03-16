@@ -14,6 +14,12 @@ export async function getTerms(): Promise<Terms[]> {
       header,
       description,
       content
-    }`
+    }`,
+    {},
+    {
+      next: {
+        revalidate: 0,
+      },
+    }
   )
 }

@@ -13,6 +13,12 @@ export async function getCookieConsent(): Promise<CookieConsent[]> {
       header,
       cookieConsentDescription,
       buttonText
-    }`
+    }`,
+    {},
+    {
+      next: {
+        revalidate: 0,
+      },
+    }
   )
 }

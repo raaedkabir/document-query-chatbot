@@ -17,6 +17,12 @@ export async function getHome(): Promise<Home[]> {
       callToActionText,
       callToActionURL,
       "image": image.asset->url
-    }`
+    }`,
+    {},
+    {
+      next: {
+        revalidate: 0,
+      },
+    }
   )
 }

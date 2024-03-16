@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "docker:build": "docker build -t nextjs-docker .",
+        "docker:build": "docker build -t nextjs-docker .",
     "docker:run": "docker run -p 3000:3000 nextjs-docker",
     "setup": "tsx -r dotenv/config scripts/setup.ts"
   },
@@ -50,6 +50,7 @@
     "swr": "^2.2.5"
   },
   "devDependencies": {
+    "@sanity/eslint-config-studio": "^3.0.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

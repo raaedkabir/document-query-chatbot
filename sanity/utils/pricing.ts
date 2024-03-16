@@ -26,6 +26,12 @@ export async function getPricing(): Promise<Pricing[]> {
       header,
       description,
       pricingPlans
-    }`
+    }`,
+    {},
+    {
+      next: {
+        revalidate: 0,
+      },
+    }
   )
 }
