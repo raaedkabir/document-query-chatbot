@@ -87,7 +87,7 @@ export default function ChatPanel({
             >
               <span
                 style={{ overflowWrap: 'anywhere' }}
-                className={`inline-block whitespace-pre-wrap rounded-xl px-4 py-3 ${message.role == 'assistant' ? 'rounded-bl-none bg-gray-light text-gray' : 'rounded-br-none bg-primary text-white'}`}
+                className={`inline-block whitespace-pre-wrap rounded-xl px-4 py-3 ${message.role == 'assistant' ? 'rounded-bl-none bg-gray-light text-gray-dark' : 'rounded-br-none bg-primary text-white'}`}
               >
                 {message.content}
               </span>
@@ -133,7 +133,7 @@ export default function ChatPanel({
               autoFocus={true}
               value={input}
               onChange={handleInputChange}
-              className="w-full rounded-full border-2 border-gray-light bg-gray-light py-2 pl-5 pr-16 text-gray placeholder-gray focus:border-primary focus:placeholder-gray focus:outline-none"
+              className="w-full rounded-full border-2 border-gray-light bg-gray-light py-2 pl-5 pr-16 text-gray-dark placeholder-gray focus:border-primary focus:placeholder-gray focus:outline-none"
             />
             <div className="absolute inset-y-0 right-2 hidden items-center sm:flex">
               <button
