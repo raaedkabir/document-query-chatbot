@@ -104,7 +104,7 @@ function NavbarWithNoSSR({
                       <Bars3Icon className="size-8" />
                     </button>
                     <h1 className="text-center text-3xl font-bold text-primary">
-                      DOCQA
+                      <Link href="/">DOCQA</Link>
                     </h1>
                   </div>
                   <hr className="my-4 border-gray-dark/25" />
