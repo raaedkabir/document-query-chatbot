@@ -1,22 +1,50 @@
 import { client } from '../lib/client'
 import { groq } from 'next-sanity'
 
-interface Home {
+export interface HomeCopy {
   header: string
   description: string
   callToActionText: string
   callToActionURL: string
-  image: string
+  imageSrc: string
+  imageData: {
+    width: number
+    aspectRatio: number
+    height: number
+  }
+  secondaryHeader: string
+  secondaryDescription: string
+  detailsList: {
+    stepNumber: string
+    title: string
+    description: string
+    imageSrc: string
+    imageData: {
+      width: number
+      aspectRatio: number
+      height: number
+    }
+  }[]
 }
 
-export async function getHome(): Promise<Home[]> {
+export async function getHomeCopy(): Promise<HomeCopy> {
   return client.fetch(
-    groq`*[_type == "home"]{
+    groq`*[_type == "home"][0] {
       header,
       description,
       callToActionText,
       callToActionURL,
-      "image": image.asset->url
+      "imageSrc": image.asset->url,
+      "imageData": image.asset->metadata.dimensions,
+      secondaryHeader,
+      secondaryDescription,
+      detailsList[] {
+        stepNumber,
+        title,
+        description,
+        "imageSrc": image.asset->url,
+        "imageData": image.asset->metadata.dimensions
+      }
     }`,
     {},
     {

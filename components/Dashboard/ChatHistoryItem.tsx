@@ -9,11 +9,14 @@ import {
 } from '@heroicons/react/24/outline'
 import { updateChatName, deleteChat } from '@/services/dynamodb'
 import type { IChatHistoryTableItem } from '@/services/dynamodb'
+import type { DashboardNavbarCopy } from '@/sanity/utils/dashboardNavbar'
 
 export default function ChatHistoryItem({
+  copy,
   file,
   userId,
 }: {
+  copy: DashboardNavbarCopy
   file: IChatHistoryTableItem
   userId: string
 }) {
@@ -71,7 +74,8 @@ export default function ChatHistoryItem({
               })
             }}
           >
-            <PencilIcon className="mr-2 size-5" /> Rename
+            <PencilIcon className="mr-2 size-5" />{' '}
+            {copy.chatHistoryActions.renameChatAction}
           </button>
           <hr className="my-1.5 border-white" />
           <button
@@ -80,7 +84,8 @@ export default function ChatHistoryItem({
               deleteChat(userId, file.chat_id)
             }}
           >
-            <TrashIcon className="mr-2 size-5" /> Delete
+            <TrashIcon className="mr-2 size-5" />{' '}
+            {copy.chatHistoryActions.deleteChatAction}
           </button>
         </div>
       </FloatingWindow>

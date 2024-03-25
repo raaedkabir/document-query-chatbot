@@ -6,10 +6,13 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import PDFPanel from '@/components/Dashboard/Chat/PDFPanel'
 import ChatPanel from '@/components/Dashboard/Chat/ChatPanel'
 import type { IChatHistoryTableItem } from '@/services/dynamodb'
+import type { DashboardChatCopy } from '@/sanity/utils/dashboardChat'
 
 export default function PanelWrapper({
+  copy,
   chatDetails: { file_name: fileName, user_id: userId, chat_id: chatId, chat },
 }: {
+  copy: DashboardChatCopy
   chatDetails: IChatHistoryTableItem
 }) {
   const [displayChat, setDisplayChat] = useState(true)
@@ -38,6 +41,7 @@ export default function PanelWrapper({
           className={`col-span-9 lg:col-span-4 ${isLg ? 'block' : displayChat ? 'block' : 'hidden'}`}
         >
           <ChatPanel
+            copy={copy}
             fileName={fileName}
             userId={userId}
             chatId={chatId}

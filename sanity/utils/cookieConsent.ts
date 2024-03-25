@@ -1,15 +1,15 @@
 import { client } from '../lib/client'
 import { groq } from 'next-sanity'
 
-interface CookieConsent {
+interface CookieConsentCopy {
   header: string
   cookieConsentDescription: string
   buttonText: string
 }
 
-export async function getCookieConsent(): Promise<CookieConsent[]> {
+export async function getCookieConsentCopy(): Promise<CookieConsentCopy> {
   return client.fetch(
-    groq`*[_type == "cookieConsent"]{
+    groq`*[_type == "cookieConsent"][0] {
       header,
       cookieConsentDescription,
       buttonText

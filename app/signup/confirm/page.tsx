@@ -3,7 +3,7 @@
 import { useState, FormEvent } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
-import Navbar from '@/components/Navbar'
+import NavbarWrapper from '@/components/NavbarWrapper'
 import Footer from '@/components/Footer'
 // import { getSignUpConfirm } from '@/sanity/utils/sign-up-confirm'
 
@@ -55,7 +55,7 @@ export default function SignupConfirm() {
 
   return (
     <>
-      <Navbar />
+      <NavbarWrapper />
       <main className="container mx-auto px-4">
         <div className="mb-8 mt-24 text-center md:px-20">
           <div className="mx-auto mb-10 sm:max-w-lg">

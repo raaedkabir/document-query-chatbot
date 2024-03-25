@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react'
 import { useFormState } from 'react-dom'
 import SubmitFormButton from '@/components/Forms/UI/SubmitFormButton'
 import { sendEmail } from '@/app/form-actions'
+import type { ContactCopy } from '@/sanity/utils/contact'
 
 const initialState = {
   message: '',
   status: '',
 }
 
-export default function ContactForm() {
+export default function ContactForm({ copy }: { copy: ContactCopy }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [subject, setSubject] = useState('')
@@ -34,7 +35,7 @@ export default function ContactForm() {
             htmlFor="name"
             className="sr-only block text-sm font-medium leading-6 text-gray-dark"
           >
-            Your Name
+            {copy.nameFormField.label}
           </label>
         </div>
         <div className="mt-2">
@@ -44,7 +45,7 @@ export default function ContactForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             type="text"
-            placeholder="Your Name"
+            placeholder={copy.nameFormField.placeholder}
             required
             className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-dark shadow-sm ring-1 ring-inset ring-gray-light placeholder:text-gray focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
           />
@@ -57,7 +58,7 @@ export default function ContactForm() {
             htmlFor="email"
             className="sr-only block text-sm font-medium leading-6 text-gray-dark"
           >
-            Email address
+            {copy.emailFormField.label}
           </label>
         </div>
         <div className="mt-2">
@@ -67,7 +68,7 @@ export default function ContactForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
-            placeholder="Your Email Address"
+            placeholder={copy.emailFormField.placeholder}
             required
             className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-dark shadow-sm ring-1 ring-inset ring-gray-light placeholder:text-gray focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
           />
@@ -80,7 +81,7 @@ export default function ContactForm() {
             htmlFor="subject"
             className="sr-only block text-sm font-medium leading-6 text-gray-dark"
           >
-            Subject
+            {copy.subjectFormField.label}
           </label>
         </div>
         <div className="mt-2">
@@ -90,7 +91,7 @@ export default function ContactForm() {
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             type="text"
-            placeholder="Subject"
+            placeholder={copy.subjectFormField.placeholder}
             required
             className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-dark shadow-sm ring-1 ring-inset ring-gray-light placeholder:text-gray focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
           />
@@ -103,7 +104,7 @@ export default function ContactForm() {
             htmlFor="message"
             className="sr-only block text-sm font-medium leading-6 text-gray-dark"
           >
-            Enter your message
+            {copy.messageFormField.label}
           </label>
         </div>
         <div className="mt-2">
@@ -112,7 +113,7 @@ export default function ContactForm() {
             name="message"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Enter your message"
+            placeholder={copy.messageFormField.placeholder}
             required
             className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-dark shadow-sm ring-1 ring-inset ring-gray-light placeholder:text-gray focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
           />
@@ -124,7 +125,7 @@ export default function ContactForm() {
       </p>
 
       <div>
-        <SubmitFormButton text="Send Message" />
+        <SubmitFormButton text={copy.submitFormButtonText} />
       </div>
     </form>
   )

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Montserrat, Nunito } from 'next/font/google'
 import './globals.css'
-import { getSiteMetadata } from '@/sanity/utils/siteMetadata'
+import { getSiteMetadataCopy } from '@/sanity/utils/siteMetadata'
 import Toast from '@/components/Toast'
 import CookieConsent from '@/components/CookieConsent'
 
@@ -15,11 +15,11 @@ const nunito = Nunito({
 })
 
 export async function generateMetadata(): Promise<Metadata> {
-  const siteMetadata = await getSiteMetadata()
+  const siteMetadataCopy = await getSiteMetadataCopy()
 
   return {
-    title: siteMetadata[0].title,
-    description: siteMetadata[0].description,
+    title: siteMetadataCopy.title || 'myDocQA',
+    description: siteMetadataCopy.description || 'Your AI PDF Chatbot',
   }
 }
 

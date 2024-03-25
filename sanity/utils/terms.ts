@@ -2,15 +2,15 @@ import { client } from '../lib/client'
 import { groq } from 'next-sanity'
 import type { PortableTextBlock } from 'sanity'
 
-interface Terms {
+interface TermsCopy {
   header: string
   description: string
   content: PortableTextBlock
 }
 
-export async function getTerms(): Promise<Terms[]> {
+export async function getTermsCopy(): Promise<TermsCopy> {
   return client.fetch(
-    groq`*[_type == "terms"]{
+    groq`*[_type == "terms"][0] {
       header,
       description,
       content

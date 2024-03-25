@@ -4,7 +4,7 @@ import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
-import Navbar from '@/components/Navbar'
+import NavbarWrapper from '@/components/NavbarWrapper'
 import Footer from '@/components/Footer'
 
 export default function LoginReset() {
@@ -31,7 +31,7 @@ export default function LoginReset() {
 
   return (
     <>
-      <Navbar />
+      <NavbarWrapper />
       <main className="container mx-auto px-4">
         <div className="my-24 text-center md:px-20">
           <div className="mx-auto mb-10 sm:max-w-lg">

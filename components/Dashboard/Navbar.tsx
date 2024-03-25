@@ -14,13 +14,16 @@ import {
   UserIcon,
 } from '@heroicons/react/24/outline'
 import ChatHistory from './ChatHistory'
+import type { DashboardNavbarCopy } from '@/sanity/utils/dashboardNavbar'
 
 function NavbarWithNoSSR({
+  copy,
   chatHistory,
   // profilePicture,
   givenName,
   userId,
 }: {
+  copy: DashboardNavbarCopy
   chatHistory: any[]
   // profilePicture: string
   givenName: string
@@ -104,7 +107,7 @@ function NavbarWithNoSSR({
                       <Bars3Icon className="size-8" />
                     </button>
                     <h1 className="text-center text-3xl font-bold text-primary">
-                      <Link href="/">DOCQA</Link>
+                      <Link href="/">{copy.navbarTitle}</Link>
                     </h1>
                   </div>
                   <hr className="my-4 border-gray-dark/25" />
@@ -112,11 +115,17 @@ function NavbarWithNoSSR({
                     className="mx-auto flex h-9 items-center justify-center rounded-md bg-primary px-3 text-base font-semibold text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
                     href="/dashboard"
                   >
-                    <PDFIcon className="mr-2 size-6" /> Files
+                    <PDFIcon className="mr-2 size-6" /> {copy.filesTitle}
                   </Link>
                   <hr className="my-4 border-gray-dark/25" />
-                  <p className="mb-2 text-xl text-gray-dark">Chat History</p>
-                  <ChatHistory chatHistory={chatHistory} userId={userId} />
+                  <p className="mb-2 text-xl text-gray-dark">
+                    {copy.chatHistoryTitle}
+                  </p>
+                  <ChatHistory
+                    copy={copy}
+                    chatHistory={chatHistory}
+                    userId={userId}
+                  />
                 </div>
                 <div className="text-center font-bold">{givenName}</div>
                 <div className="flex items-end gap-1 text-center">
@@ -134,7 +143,7 @@ function NavbarWithNoSSR({
                       }}
                       className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-base font-semibold text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
                     >
-                      Sign Out
+                      {copy.signOutButton}
                     </button>
                   </div>
                   <Link href="/dashboard/help" className="ml-auto">

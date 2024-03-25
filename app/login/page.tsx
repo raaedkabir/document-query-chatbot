@@ -4,7 +4,7 @@ import { useState, FormEvent } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import Navbar from '@/components/Navbar'
+import NavbarWrapper from '@/components/NavbarWrapper'
 import FacebookLogin from '@/components/FacebookLogin'
 import GoogleSignIn from '@/components/GoogleSignIn'
 import Footer from '@/components/Footer'
@@ -41,7 +41,7 @@ export default function Login() {
 
   return (
     <>
-      <Navbar />
+      <NavbarWrapper />
       <main className="container mx-auto px-4">
         <div className="mb-8 mt-24 text-center md:px-20">
           <div className="mx-auto mb-10 sm:max-w-lg">

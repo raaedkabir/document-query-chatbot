@@ -5,11 +5,14 @@ import UploadedFiles from '@/components/Dashboard/UploadedFiles'
 import { getUserDetails } from '@/services/cognito'
 import { getUserRecord } from '@/services/dynamodb'
 import { listObjects } from '@/services/storage'
+import { getDashboardCopy } from '@/sanity/utils/dashboard'
 import { retrievePlanLimits } from '../actions'
 
 export default async function Dashboard() {
   const accessToken = cookies().get('AccessToken')?.value!
   const idToken = cookies().get('IdToken')?.value!
+
+  const dashboardCopy = await getDashboardCopy()
 
   const userDetails = await getUserDetails(accessToken)
 
@@ -56,12 +59,14 @@ export default async function Dashboard() {
         <div className="rounded-2xl border border-gray-dark/50 p-5">
           <div className="container mx-auto text-center">
             <h1 className="text-center text-3xl font-bold text-primary">
-              DOCQA
+              {dashboardCopy.title}
             </h1>
             <div className="flex justify-between">
-              <h2 className="text-center text-3xl font-bold">My Files</h2>
+              <h2 className="text-center text-3xl font-bold">
+                {dashboardCopy.header}
+              </h2>
               <UploadModal
-                title="Upload PDF"
+                copy={dashboardCopy}
                 userId={userId}
                 files={files}
                 planLimits={planLimits}
