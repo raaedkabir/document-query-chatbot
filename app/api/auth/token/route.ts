@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { getUser } from '@/services/cognito'
+import { getUserDetails } from '@/services/cognito'
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const { id_token, access_token, refresh_token, expires_in } =
       await response.json()
 
-    const user = await getUser(access_token)
+    const user = await getUserDetails(access_token)
 
     return NextResponse.json({
       message: 'Successfully retrieved tokens!',

@@ -22,6 +22,14 @@ export type IQueryCommandOutput<T> = Omit<QueryCommandOutput, 'Items'> & {
   Items: T[]
 }
 
+export type IUsersTableItem = {
+  user_id: string // partition key
+  user_name: string
+  given_name: string
+  user_email: string
+  stripe_customer_id: string
+}
+
 export type IChatHistoryTableItem = {
   user_id: string // partition key
   chat_id: string // sort key
@@ -40,6 +48,21 @@ const client = new DynamoDBClient({
   },
 })
 const docClient = DynamoDBDocumentClient.from(client)
+
+export const getUserRecord = async (userId: string) => {
+  const command = new GetCommand({
+    TableName: 'document-query-chatbot-users',
+    Key: {
+      user_id: userId,
+    },
+  })
+
+  const response = (await docClient.send(
+    command
+  )) as IGetCommandOutput<IUsersTableItem>
+
+  return response
+}
 
 export const putNewChat = async (
   userId: string,

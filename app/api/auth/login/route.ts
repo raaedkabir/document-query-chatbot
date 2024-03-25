@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { login, getUser } from '@/services/cognito'
+import { login, getUserDetails } from '@/services/cognito'
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       path: '/',
     })
 
-    const user = await getUser(AccessToken!)
+    const user = await getUserDetails(AccessToken!)
 
     cookies().set('UserId', user.Username || '', {
       httpOnly: true,

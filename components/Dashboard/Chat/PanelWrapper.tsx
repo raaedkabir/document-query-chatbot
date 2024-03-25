@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 import useBreakpoints from '@/hooks/useBreakpoints'
-import { Toaster, resolveValue } from 'react-hot-toast'
-import { Transition } from '@headlessui/react'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import PDFPanel from '@/components/Dashboard/Chat/PDFPanel'
 import ChatPanel from '@/components/Dashboard/Chat/ChatPanel'
@@ -19,28 +17,6 @@ export default function PanelWrapper({
 
   return (
     <>
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          duration: 2000,
-        }}
-      >
-        {(t) => (
-          <Transition
-            appear
-            show={t.visible}
-            className="flex transform rounded-xl bg-gray-dark p-4 text-sm text-white shadow-lg"
-            enter="transition-all duration-150"
-            enterFrom="opacity-0 scale-50"
-            enterTo="opacity-100 scale-100"
-            leave="transition-all duration-150"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-75"
-          >
-            <p className="px-2">{resolveValue(t.message, t)}</p>
-          </Transition>
-        )}
-      </Toaster>
       <div
         className={`fixed z-10 m-4 translate-y-16 transition-opacity hover:bg-gray/50 focus:bg-gray/50 sm:-translate-x-20 ${!isSm ? 'rounded-2xl bg-secondary' : 'rounded-full'}`}
       >

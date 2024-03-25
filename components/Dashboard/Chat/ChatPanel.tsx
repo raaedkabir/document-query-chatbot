@@ -60,7 +60,7 @@ export default function ChatPanel({
     }
   }, [messages, isLoading, userId, chatId])
 
-  const notify = () => toast('Copied to clipboard!')
+  const notify = () => toast.success('Copied to clipboard!')
 
   const copyTextToClipboard = async (text: string) => {
     if ('clipboard' in navigator) {
