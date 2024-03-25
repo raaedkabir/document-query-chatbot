@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getUser } from '@/services/cognito'
+import { getUserDetails } from '@/services/cognito'
 import { getChat } from '@/services/dynamodb'
 import PanelWrapper from '@/components/Dashboard/Chat/PanelWrapper'
 
@@ -24,7 +24,7 @@ export default async function DashboardChat({
   /**
    * Get user details
    */
-  const userDetails = await getUser(accessToken)
+  const userDetails = await getUserDetails(accessToken)
   const userId =
     userDetails.UserAttributes?.find(
       (userAttribute) => userAttribute.Name === 'sub'

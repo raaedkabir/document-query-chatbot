@@ -1,12 +1,12 @@
 import { cookies } from 'next/headers'
-import { getUser } from '@/services/cognito'
+import { getUserDetails } from '@/services/cognito'
 import { getChats } from '@/services/dynamodb'
 import NavbarWithNoSSR from '@/components/Dashboard/Navbar'
 
 export default async function NavbarWrapper() {
   const accessToken = cookies().get('AccessToken')?.value!
 
-  const userDetails = await getUser(accessToken)
+  const userDetails = await getUserDetails(accessToken)
 
   const userId =
     userDetails.UserAttributes?.find(

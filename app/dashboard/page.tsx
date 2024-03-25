@@ -2,19 +2,26 @@ import { Suspense } from 'react'
 import { cookies } from 'next/headers'
 import UploadModal from '@/components/Dashboard/UploadModal'
 import UploadedFiles from '@/components/Dashboard/UploadedFiles'
-import { getUser } from '@/services/cognito'
+import { getUserDetails } from '@/services/cognito'
+import { getUserRecord } from '@/services/dynamodb'
 import { listObjects } from '@/services/storage'
+import { retrievePlanLimits } from '../actions'
 
 export default async function Dashboard() {
   const accessToken = cookies().get('AccessToken')?.value!
   const idToken = cookies().get('IdToken')?.value!
 
-  const userDetails = await getUser(accessToken)
+  const userDetails = await getUserDetails(accessToken)
 
   const userId =
     userDetails.UserAttributes?.find(
       (userAttribute) => userAttribute.Name === 'sub'
     )?.Value || ''
+
+  const userRecord = await getUserRecord(userId)
+  const planLimits = await retrievePlanLimits(
+    userRecord.Item?.stripe_customer_id || ''
+  )
 
   const response = await listObjects(idToken, `users/${userId}/uploads/`)
 
@@ -53,7 +60,12 @@ export default async function Dashboard() {
             </h1>
             <div className="flex justify-between">
               <h2 className="text-center text-3xl font-bold">My Files</h2>
-              <UploadModal title="Upload PDF" userId={userId} files={files} />
+              <UploadModal
+                title="Upload PDF"
+                userId={userId}
+                files={files}
+                planLimits={planLimits}
+              />
             </div>
             <hr className="my-4 border-gray-dark/25" />
             <div className="flex flex-wrap">

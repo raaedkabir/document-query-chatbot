@@ -29,9 +29,18 @@ type PartUploadResponse = {
 export default function Uploader({
   userId,
   files,
+  planLimits,
 }: {
   userId: string
   files: { name: string | undefined }[] | undefined
+  planLimits: {
+    pdfLimit: string | number
+    pdfSize: string | number
+    pdfPages: string | number
+    queries: string | number
+    adFree: 'true' | 'false'
+    currentPeriodStart: number
+  }
 }) {
   // prevent modal from closing while uploading
   const { setPreventClose } = useContext(PreventCloseContext)
@@ -43,7 +52,7 @@ export default function Uploader({
   const [errorMessage, setErrorMessage] = useState('')
   const router = useRouter()
   const store = useAppStore()
-  const maxFileSizeInMB = 50
+  const maxFileSizeInMB = Number(planLimits.pdfSize)
 
   const {
     acceptedFiles,
@@ -81,11 +90,13 @@ export default function Uploader({
           getDocument(typedArray.slice(0)).promise.then(async (doc) => {
             const numPages = doc.numPages
 
-            if (numPages > 10) {
+            if (numPages > Number(planLimits.pdfPages)) {
               // remove file from acceptedFiles array
               acceptedFiles.splice(index, 1)
               setError(true)
-              setErrorMessage('File has more than 10 pages')
+              setErrorMessage(
+                `File has more than ${Number(planLimits.pdfPages)} page(s)`
+              )
             } else if (files?.some((f) => f.name === file.name)) {
               setError(true)
               setErrorMessage(
@@ -216,7 +227,10 @@ export default function Uploader({
       <div {...getRootProps({ className })}>
         <input {...getInputProps()} />
         <p>Click to upload or drag and drop</p>
-        <p className="mt-4">PDF ONLY (up to {maxFileSizeInMB} MB)</p>
+        <p className="mt-4">
+          PDF ONLY{' '}
+          {maxFileSizeInMB !== Infinity ? `(up to ${maxFileSizeInMB} MB)` : ''}
+        </p>
         {acceptedFiles.length > 0 && (
           <div className="mt-4 flex items-center divide-x divide-gray-dark/25 rounded-md border border-gray-dark/25 p-2">
             <DocumentIcon className="m-2 size-4" />

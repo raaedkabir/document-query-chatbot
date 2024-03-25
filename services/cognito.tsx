@@ -78,7 +78,7 @@ export const login = async (username: string, password: string) =>
     })
   )
 
-export const getUser = async (accessToken: string) =>
+export const getUserDetails = async (accessToken: string) =>
   await cognitoClient.send(
     new GetUserCommand({
       AccessToken: accessToken,
