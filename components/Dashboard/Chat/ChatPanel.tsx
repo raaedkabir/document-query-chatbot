@@ -20,9 +20,10 @@ export default function ChatPanel({
   chat: string
 }) {
   const chatRef = useRef<HTMLInputElement>(null)
+  const chatHistory = JSON.parse(chat)
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
-      initialMessages: JSON.parse(chat),
+      initialMessages: chatHistory,
       body: {
         fileName,
         userId,
@@ -53,12 +54,13 @@ export default function ChatPanel({
     // update chat history when assistant responds
     if (
       messages.length > 1 &&
+      messages.length !== chatHistory.length && // prevent unwanted updates on initial load
       messages[messages.length - 1].role === 'assistant' &&
       !isLoading
     ) {
       updateChat(userId, chatId, JSON.stringify(messages))
     }
-  }, [messages, isLoading, userId, chatId])
+  }, [messages, chatHistory, isLoading, userId, chatId])
 
   const notify = () => toast.success('Copied to clipboard!')
 
