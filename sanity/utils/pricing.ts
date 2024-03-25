@@ -1,7 +1,7 @@
 import { client } from '../lib/client'
 import { groq } from 'next-sanity'
 
-interface Pricing {
+interface PricingCopy {
   header: string
   description: string
   pricingPlans: {
@@ -20,9 +20,9 @@ interface Pricing {
   }[]
 }
 
-export async function getPricing(): Promise<Pricing[]> {
+export async function getPricingCopy(): Promise<PricingCopy> {
   return client.fetch(
-    groq`*[_type == "pricing"]{
+    groq`*[_type == "pricing"][0] {
       header,
       description,
       pricingPlans

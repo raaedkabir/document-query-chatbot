@@ -4,12 +4,12 @@ import {
   CheckIcon,
   MinusIcon,
 } from '@heroicons/react/24/outline'
-import Navbar from '@/components/Navbar'
+import NavbarWrapper from '@/components/NavbarWrapper'
 import Footer from '@/components/Footer'
-import { getPricing } from '@/sanity/utils/pricing'
+import { getPricingCopy } from '@/sanity/utils/pricing'
 
 export default async function Pricing() {
-  const pricing = await getPricing()
+  const pricingCopy = await getPricingCopy()
 
   const renderIcon = (icon: string) => {
     switch (icon) {
@@ -23,7 +23,7 @@ export default async function Pricing() {
   }
 
   let cols
-  switch (pricing[0].pricingPlans.length) {
+  switch (pricingCopy.pricingPlans.length) {
     case 4:
       cols = 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-4'
       break
@@ -39,17 +39,17 @@ export default async function Pricing() {
 
   return (
     <>
-      <Navbar />
+      <NavbarWrapper />
       <main className="container mx-auto px-4">
         <div className="mb-8 mt-24 text-center md:px-20">
           <div className="mx-auto mb-10 sm:max-w-lg">
             <h1 className="text-6xl font-bold sm:text-7xl">
-              {pricing[0].header}
+              {pricingCopy.header}
             </h1>
-            <p className="mt-5 sm:text-lg">{pricing[0].description}</p>
+            <p className="mt-5 sm:text-lg">{pricingCopy.description}</p>
           </div>
           <div className={`grid gap-10 py-12 ${cols}`}>
-            {pricing[0].pricingPlans.map((pricingPlan) => (
+            {pricingCopy.pricingPlans.map((pricingPlan) => (
               <div
                 key={pricingPlan.header}
                 className={`relative rounded-2xl border ${pricingPlan.feature ? 'border-2 border-primary shadow-secondary' : 'border-gray-light'} col-span-1 bg-white shadow-lg`}

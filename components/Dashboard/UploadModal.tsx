@@ -4,13 +4,16 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import Dialog from '../UI/Dialog'
 import Uploader from './Uploader'
+import type { DashboardCopy } from '@/sanity/utils/dashboard'
 
 export default function UploadModal({
+  copy,
   title,
   userId,
   files,
   planLimits,
 }: {
+  copy: DashboardCopy
   title: string
   userId: string
   files:
@@ -49,7 +52,7 @@ export default function UploadModal({
             )
 
             if (fileUploadsWithinCurrentPeriod >= Number(planLimits.pdfLimit)) {
-              toast.error('You have reached your upload limit for this period')
+              toast.error(copy.uploadModalErrorMessages.fileUploadQuotaMessage)
               return
             }
           }
@@ -61,7 +64,12 @@ export default function UploadModal({
       </button>
 
       <Dialog title={title} isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Uploader userId={userId} files={files} planLimits={planLimits} />
+        <Uploader
+          copy={copy}
+          userId={userId}
+          files={files}
+          planLimits={planLimits}
+        />
       </Dialog>
     </>
   )

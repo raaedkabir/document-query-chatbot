@@ -3,14 +3,15 @@
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import useSWR from 'swr'
-import { getCookieConsent } from '@/sanity/utils/cookieConsent'
+import { getCookieConsentCopy } from '@/sanity/utils/cookieConsent'
 
 function CookieConsentWithNoSSR() {
   const [isButtonClicked, setIsButtonClicked] = useState(false)
-  const { data, error, isLoading } = useSWR(
-    'getCookieConsent',
-    getCookieConsent
-  )
+  const {
+    data: copy,
+    error,
+    isLoading,
+  } = useSWR('getCookieConsent', getCookieConsentCopy)
 
   if (
     typeof window === 'undefined' ||
@@ -38,7 +39,7 @@ function CookieConsentWithNoSSR() {
         <div className="-mx-3 items-center md:flex">
           <div className="mb-5 px-3 md:mb-0 md:flex-1">
             <p className="text-center leading-tight text-white md:pr-12 md:text-left">
-              {data![0].cookieConsentDescription}
+              {copy!.cookieConsentDescription}
             </p>
           </div>
           <div className="px-3 text-center">
@@ -49,7 +50,7 @@ function CookieConsentWithNoSSR() {
               }}
               className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-white transition-colors hover:bg-primary/80 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
             >
-              {data![0].buttonText}
+              {copy!.buttonText}
             </button>
           </div>
         </div>

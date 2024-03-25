@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { getUserDetails } from '@/services/cognito'
 import { getChat } from '@/services/dynamodb'
 import PanelWrapper from '@/components/Dashboard/Chat/PanelWrapper'
+import { getDashboardChatCopy } from '@/sanity/utils/dashboardChat'
 
 export default async function DashboardChat({
   searchParams,
@@ -22,6 +23,11 @@ export default async function DashboardChat({
   if (!chatId) redirect('/dashboard')
 
   /**
+   * Get Dashboard Chat page copy
+   */
+  const dashboardChatCopy = await getDashboardChatCopy()
+
+  /**
    * Get user details
    */
   const userDetails = await getUserDetails(accessToken)
@@ -36,5 +42,5 @@ export default async function DashboardChat({
   const { Item: chatDetails } = await getChat(userId, chatId)
   if (!chatDetails) redirect('/dashboard')
 
-  return <PanelWrapper chatDetails={chatDetails} />
+  return <PanelWrapper copy={dashboardChatCopy} chatDetails={chatDetails} />
 }

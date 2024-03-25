@@ -1,7 +1,7 @@
 import { client } from '../lib/client'
 import { groq } from 'next-sanity'
 
-interface SiteMetadata {
+interface SiteMetadataCopy {
   title: string
   description: string
   callToActionText: string
@@ -9,9 +9,9 @@ interface SiteMetadata {
   image: string
 }
 
-export async function getSiteMetadata(): Promise<SiteMetadata[]> {
+export async function getSiteMetadataCopy(): Promise<SiteMetadataCopy> {
   return client.fetch(
-    groq`*[_type == "siteMetadata"]{
+    groq`*[_type == "siteMetadata"][0] {
       title,
       description
     }`,

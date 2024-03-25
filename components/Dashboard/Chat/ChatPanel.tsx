@@ -7,13 +7,16 @@ import toast from 'react-hot-toast'
 import { ArrowRightIcon, ClipboardIcon } from '@heroicons/react/24/outline'
 import LoadingIcon from '@/components/LoadingIcon'
 import { updateChat } from '@/services/dynamodb'
+import { DashboardChatCopy } from '@/sanity/utils/dashboardChat'
 
 export default function ChatPanel({
+  copy,
   fileName,
   userId,
   chatId,
   chat,
 }: {
+  copy: DashboardChatCopy
   fileName: string
   userId: string
   chatId: string
@@ -30,7 +33,8 @@ export default function ChatPanel({
       },
       onError() {
         toast(
-          'The message you submitted was too long. Please submit something shorter or start a new chat.',
+          copy.chatErrorMessage ||
+            'The message you submitted was too long. Please submit something shorter or start a new chat.',
           {
             duration: 60000, // 1 minute
           }
@@ -61,8 +65,6 @@ export default function ChatPanel({
       updateChat(userId, chatId, JSON.stringify(messages))
     }
   }, [messages, chatHistory, isLoading, userId, chatId])
-
-  const notify = () => toast.success('Copied to clipboard!')
 
   const copyTextToClipboard = async (text: string) => {
     if ('clipboard' in navigator) {
@@ -105,7 +107,9 @@ export default function ChatPanel({
               className={`size-6 w-6 shrink-0 cursor-pointer self-center rounded-full bg-primary p-1 text-white opacity-0 group-hover:opacity-100 ${message.role === 'assistant' ? 'order-3' : 'order-1'}`}
               onClick={() => {
                 copyTextToClipboard(message.content)
-                notify()
+                toast.success(
+                  copy.copiedTextToClipboardMessage || 'Copied to clipboard!'
+                )
               }}
             />
           </div>
@@ -127,9 +131,14 @@ export default function ChatPanel({
       <div className="border-t-2 border-gray-light px-4 pt-4 sm:mb-0">
         <div className="relative flex">
           <form onSubmit={handleSubmit} className="w-full">
+            <label htmlFor="prompt" className="sr-only">
+              {copy.promptTextField.label ||
+                'Enter a prompt for the AI ChatBot to answer'}
+            </label>
             <input
+              id="prompt"
               type="text"
-              placeholder="Say something..."
+              placeholder={copy.promptTextField.placeholder || 'Type here...'}
               autoComplete="off"
               // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus={true}

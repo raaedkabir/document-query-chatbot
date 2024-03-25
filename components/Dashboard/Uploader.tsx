@@ -10,11 +10,12 @@ import LoadingIcon from '@/components/LoadingIcon'
 import { useAppStore } from '@/lib/store/hooks'
 import { setFileName, setId } from '@/lib/store/features/users/usersSlice'
 import { chunkFileForS3, chunkFileForPinecone } from '@/lib/utils/getChunks'
+import { putNewChat } from '@/services/dynamodb'
 import type {
   CreateMultipartUploadCommandOutput,
   UploadPartCommandOutput,
 } from '@aws-sdk/client-s3'
-import { putNewChat } from '@/services/dynamodb'
+import type { DashboardCopy } from '@/sanity/utils/dashboard'
 
 type InitiateUploadResponse = {
   message: string
@@ -26,11 +27,25 @@ type PartUploadResponse = {
   data: UploadPartCommandOutput
 }
 
+const replaceCopyPlaceholder = (
+  copy: string,
+  value: string | number,
+  placeholder = /\{(.+?)\}/
+) => {
+  if (!copy) return ''
+  if (!value) return copy
+  if (typeof value === 'number') value = value.toString()
+
+  return copy.replace(placeholder, value)
+}
+
 export default function Uploader({
+  copy,
   userId,
   files,
   planLimits,
 }: {
+  copy: DashboardCopy
   userId: string
   files: { name: string | undefined }[] | undefined
   planLimits: {
@@ -75,9 +90,14 @@ export default function Uploader({
       const errors = fileRejections[0].errors
       setError(true)
       if (errors.some(({ code }) => code === 'file-too-large')) {
-        setErrorMessage(`File is larger than ${maxFileSizeInMB} MB`)
+        setErrorMessage(
+          replaceCopyPlaceholder(
+            copy.uploadModalErrorMessages.fileSizeMessage,
+            maxFileSizeInMB
+          )
+        )
       } else if (errors.some(({ code }) => code === 'file-invalid-type')) {
-        setErrorMessage('File is not a PDF')
+        setErrorMessage(copy.uploadModalErrorMessages.fileTypeMessage)
       }
     },
     onDropAccepted: (acceptedFiles) => {
@@ -95,12 +115,15 @@ export default function Uploader({
               acceptedFiles.splice(index, 1)
               setError(true)
               setErrorMessage(
-                `File has more than ${Number(planLimits.pdfPages)} page(s)`
+                replaceCopyPlaceholder(
+                  copy.uploadModalErrorMessages.fileHasTooManyPagesMessage,
+                  planLimits.pdfPages
+                )
               )
             } else if (files?.some((f) => f.name === file.name)) {
               setError(true)
               setErrorMessage(
-                'File already uploaded. Please upload a different file or rename the file'
+                copy.uploadModalErrorMessages.fileNameAlreadyExistsMessage
               )
             } else {
               setPreventClose(true)
@@ -226,10 +249,14 @@ export default function Uploader({
     >
       <div {...getRootProps({ className })}>
         <input {...getInputProps()} />
-        <p>Click to upload or drag and drop</p>
+        <p>{copy.uploadModalContent}</p>
         <p className="mt-4">
-          PDF ONLY{' '}
-          {maxFileSizeInMB !== Infinity ? `(up to ${maxFileSizeInMB} MB)` : ''}
+          {copy.uploadModalFileTypeRestrictions}{' '}
+          {maxFileSizeInMB !== Infinity &&
+            replaceCopyPlaceholder(
+              copy.uploadModalFileSizeRestrictions,
+              maxFileSizeInMB
+            )}
         </p>
         {acceptedFiles.length > 0 && (
           <div className="mt-4 flex items-center divide-x divide-gray-dark/25 rounded-md border border-gray-dark/25 p-2">
@@ -240,12 +267,12 @@ export default function Uploader({
         )}
         {isLoading && (
           <div className="mt-4 w-full">
-            <span id="ProgressLabel" className="sr-only">
+            <span id="progess-label" className="sr-only">
               Loading
             </span>
             <span
               role="progressbar"
-              aria-labelledby="ProgressLabel"
+              aria-labelledby="progess-label"
               aria-valuenow={loadingProgress}
               className="block rounded-full border border-gray-dark/25 bg-white"
             >
