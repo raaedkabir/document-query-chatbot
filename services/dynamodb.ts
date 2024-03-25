@@ -51,7 +51,7 @@ const docClient = DynamoDBDocumentClient.from(client)
 
 export const getUserRecord = async (userId: string) => {
   const command = new GetCommand({
-    TableName: 'document-query-chatbot-users',
+    TableName: 'mydocqa-users',
     Key: {
       user_id: userId,
     },
@@ -71,7 +71,7 @@ export const putNewChat = async (
 ) => {
   const chatId = randomUUID()
   const command = new PutCommand({
-    TableName: 'document-query-chatbot-chat-history',
+    TableName: 'mydocqa-chat-history',
     Item: {
       user_id: userId,
       chat_id: chatId,
@@ -100,7 +100,7 @@ export const putNewChat = async (
 
 export const getChats = async (userId: string) => {
   const command = new QueryCommand({
-    TableName: 'document-query-chatbot-chat-history',
+    TableName: 'mydocqa-chat-history',
     KeyConditionExpression: 'user_id = :userId',
     ExpressionAttributeValues: {
       ':userId': userId,
@@ -116,7 +116,7 @@ export const getChats = async (userId: string) => {
 
 export const getChat = async (userId: string, chatId: string) => {
   const command = new GetCommand({
-    TableName: 'document-query-chatbot-chat-history',
+    TableName: 'mydocqa-chat-history',
     Key: {
       user_id: userId,
       chat_id: chatId,
@@ -136,7 +136,7 @@ export const updateChat = async (
   chat: string
 ) => {
   const command = new UpdateCommand({
-    TableName: 'document-query-chatbot-chat-history',
+    TableName: 'mydocqa-chat-history',
     Key: {
       user_id: userId,
       chat_id: chatId,
@@ -161,7 +161,7 @@ export const updateChatName = async (
   chatName: string
 ) => {
   const command = new UpdateCommand({
-    TableName: 'document-query-chatbot-chat-history',
+    TableName: 'mydocqa-chat-history',
     Key: {
       user_id: userId,
       chat_id: chatId,
@@ -183,7 +183,7 @@ export const updateChatName = async (
 
 export const deleteChat = async (userId: string, chatId: string) => {
   const command = new DeleteCommand({
-    TableName: 'document-query-chatbot-chat-history',
+    TableName: 'mydocqa-chat-history',
     Key: {
       user_id: userId,
       chat_id: chatId,
@@ -202,7 +202,7 @@ export const deleteFileFromChatHistory = async (
   fileName: string
 ) => {
   const command = new QueryCommand({
-    TableName: 'document-query-chatbot-chat-history',
+    TableName: 'mydocqa-chat-history',
     KeyConditionExpression: 'user_id = :userId',
     FilterExpression: 'file_name = :fileName',
     ExpressionAttributeValues: {
@@ -217,7 +217,7 @@ export const deleteFileFromChatHistory = async (
 
   const deleteCommands = new BatchWriteItemCommand({
     RequestItems: {
-      'document-query-chatbot-chat-history': response.Items.map((item) => ({
+      'mydocqa-chat-history': response.Items.map((item) => ({
         DeleteRequest: {
           Key: {
             user_id: { S: item.user_id },
