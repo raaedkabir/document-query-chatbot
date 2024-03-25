@@ -52,6 +52,7 @@ jobs:
           echo "DYNAMODB_ACCESS_KEY_ID=${{ secrets.DYNAMODB_ACCESS_KEY_ID }}" >> .env
           echo "DYNAMODB_SECRET_ACCESS_KEY=${{ secrets.DYNAMODB_SECRET_ACCESS_KEY }}" >> .env
           echo "USER_POOL_CLIENT_SECRET=${{ secrets.USER_POOL_CLIENT_SECRET }}" >> .env
+          echo "CONTACT_FORM_API_KEY=${{ secrets.CONTACT_FORM_API_KEY }}" >> .env
           echo "AWS_REGION=${{ vars.AWS_REGION }}" >> .env
           echo "DOMAIN_NAME=${{ vars.DOMAIN_NAME }}" >> .env
           echo "ACM_CERTIFICATE_ARN=${{ vars.ACM_CERTIFICATE_ARN }}" >> .env
@@ -62,6 +63,7 @@ jobs:
           echo "USER_POOL_CLIENT_ID=${{ vars.USER_POOL_CLIENT_ID }}" >> .env
           echo "USER_POOL_DOMAIN_URL=${{ vars.USER_POOL_DOMAIN_URL }}" >> .env
           echo "NEXT_PUBLIC_OAUTH_LOGIN_URL=${{ vars.NEXT_PUBLIC_OAUTH_LOGIN_URL }}" >> .env
+          echo "CONTACT_FORM_API_ENDPOINT=${{ vars.CONTACT_FORM_API_ENDPOINT }}" >> .env
 
           # Build a docker container and
           # push it to ECR so that it can
@@ -83,6 +85,7 @@ jobs:
             DYNAMODB_ACCESS_KEY_ID=${{ secrets.DYNAMODB_ACCESS_KEY_ID }}
             DYNAMODB_SECRET_ACCESS_KEY=${{ secrets.DYNAMODB_SECRET_ACCESS_KEY }}
             USER_POOL_CLIENT_SECRET=${{ secrets.USER_POOL_CLIENT_SECRET }}
+            CONTACT_FORM_API_KEY=${{ secrets.CONTACT_FORM_API_KEY }}
             AWS_REGION=${{ vars.AWS_REGION }}
             DOMAIN_NAME=${{ vars.DOMAIN_NAME }}
             ACM_CERTIFICATE_ARN=${{ vars.ACM_CERTIFICATE_ARN }}
@@ -93,6 +96,7 @@ jobs:
             USER_POOL_CLIENT_ID=${{ vars.USER_POOL_CLIENT_ID }}
             USER_POOL_DOMAIN_URL=${{ vars.USER_POOL_DOMAIN_URL }}
             NEXT_PUBLIC_OAUTH_LOGIN_URL=${{ vars.NEXT_PUBLIC_OAUTH_LOGIN_URL }}
+            CONTACT_FORM_API_ENDPOINT=${{ vars.CONTACT_FORM_API_ENDPOINT }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
