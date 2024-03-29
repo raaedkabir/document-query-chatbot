@@ -3,7 +3,12 @@ import type { PortableTextComponents } from '@portabletext/react'
 export const components: PortableTextComponents = {
   block: {
     normal: ({ children }) => {
-      if (Array.isArray(children) && children[0].trim() === '') {
+      if (
+        Array.isArray(children) &&
+        children.length === 1 &&
+        typeof children[0] === 'string' &&
+        children[0].trim() === ''
+      ) {
         return <br />
       }
       return <p>{children}</p>
