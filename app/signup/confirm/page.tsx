@@ -1,54 +1,18 @@
-'use client'
-
-import { useState, FormEvent } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import toast from 'react-hot-toast'
+import { redirect } from 'next/navigation'
 import NavbarWrapper from '@/components/NavbarWrapper'
 import Footer from '@/components/Footer'
+import SignupConfirmForm from '@/components/Forms/SignupConfirmForm'
+import ResendConfirmationCodeButton from '@/components/Forms/UI/ResendConfirmationCodeButton'
 // import { getSignUpConfirm } from '@/sanity/utils/sign-up-confirm'
 
-export default function SignupConfirm() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const email = searchParams.get('email')
-  const [code, setCode] = useState('')
-
+export default async function SignupConfirm({
+  searchParams,
+}: {
+  searchParams: { email?: string }
+}) {
+  const email = searchParams.email
   if (!email) {
-    return router.push('/signup')
-  }
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
-    const response = await fetch('/api/auth/confirm', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, code }),
-    })
-
-    const data = await response.json()
-
-    if (response.ok) {
-      router.push('/login')
-    } else {
-      toast.error(data.message)
-    }
-  }
-
-  async function handleResendConfirmationCode() {
-    const response = await fetch('/api/auth/resendConfirmationCode', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    })
-
-    const data = await response.json()
-
-    if (response.ok) {
-      toast.success('Sent a new verification code to your email.')
-    } else {
-      toast.error(data.message)
-    }
+    redirect('/signup')
   }
 
   // const signUpConfirm = await getSignUpConfirm()
@@ -64,46 +28,7 @@ export default function SignupConfirm() {
           <div className="mx-auto my-12 mb-8 max-w-lg rounded-2xl bg-white shadow-lg">
             <div className="flex min-h-full flex-1 flex-col justify-center p-6 lg:p-8">
               <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <form className="space-y-6" onSubmit={handleSubmit}>
-                  <div>
-                    <p className="mb-2 text-left text-gray-dark">
-                      We sent an email with a verification code to{' '}
-                      <span className="font-bold text-primary">{email}</span>.
-                    </p>
-                    <p className="mb-4 text-left text-gray-dark">
-                      Enter it below to confirm your email.
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium leading-6 text-gray-dark"
-                      >
-                        Verification code
-                      </label>
-                    </div>
-                    <div className="mt-2">
-                      <input
-                        id="code"
-                        name="code"
-                        type="number"
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        placeholder="Enter Verification Code"
-                        required
-                        className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-dark shadow-sm ring-1 ring-inset ring-gray-light placeholder:text-gray focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <button
-                      type="submit"
-                      className="inline-flex h-9 w-full items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
-                    >
-                      Verify
-                    </button>
-                  </div>
-                </form>
+                <SignupConfirmForm />
               </div>
             </div>
           </div>
@@ -114,12 +39,7 @@ export default function SignupConfirm() {
                 <li>Codes can take up to 5 minutes to arrive.</li>
                 <li>Check your spam folder.</li>
                 <li>
-                  <button
-                    onClick={handleResendConfirmationCode}
-                    className="text-primary underline"
-                  >
-                    Click here to send a new verification code.
-                  </button>
+                  <ResendConfirmationCodeButton email={email} />
                 </li>
               </ul>
             </div>

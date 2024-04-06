@@ -46,3 +46,25 @@ export async function deleteFile(userId: string, fileName: string) {
 
   revalidatePath('/dashboard')
 }
+
+export async function resendConfirmationCode(email: string) {
+  const response = await fetch(
+    `${process.env.DOMAIN_NAME}/api/auth/resendConfirmationCode`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    }
+  )
+
+  const data = await response.json()
+
+  if (response.ok) {
+    return {
+      message: 'Sent a new verification code to your email.',
+      status: 'success',
+    }
+  } else {
+    return { message: data.message, status: 'error' }
+  }
+}

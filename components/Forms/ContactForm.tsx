@@ -19,13 +19,13 @@ export default function ContactForm({ copy }: { copy: ContactCopy }) {
   const [state, formAction] = useFormState(sendEmail, initialState)
 
   useEffect(() => {
-    if (state.status === 'success') {
+    if (state?.status === 'success') {
       setName('')
       setEmail('')
       setSubject('')
       setMessage('')
     }
-  }, [state.status])
+  }, [state?.status])
 
   return (
     <form className="space-y-6" action={formAction}>
@@ -121,7 +121,7 @@ export default function ContactForm({ copy }: { copy: ContactCopy }) {
       </div>
 
       <p aria-live="polite" className="sr-only" role="status">
-        {state.message}
+        {state?.message}
       </p>
 
       <div>

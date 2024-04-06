@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 import { login, getUserDetails } from '@/services/cognito'
 
 export async function POST(req: NextRequest) {
@@ -9,38 +8,15 @@ export async function POST(req: NextRequest) {
     const { IdToken, AccessToken, RefreshToken, ExpiresIn } =
       sessionData.AuthenticationResult!
 
-    cookies().set('IdToken', IdToken || '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: ExpiresIn || 3600, // 1 hour
-      path: '/',
-    })
-
-    cookies().set('AccessToken', AccessToken || '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: ExpiresIn || 3600, // 1 hour
-      path: '/',
-    })
-
-    cookies().set('RefreshToken', RefreshToken || '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-      path: '/',
-    })
-
     const user = await getUserDetails(AccessToken!)
-
-    cookies().set('UserId', user.Username || '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-      path: '/',
-    })
 
     return NextResponse.json({
       message: 'Successfully logged in!',
+      IdToken,
+      AccessToken,
+      RefreshToken,
+      ExpiresIn,
+      UserId: user.Username,
     })
   } catch (error: any) {
     return NextResponse.json(

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 import { getUserDetails } from '@/services/cognito'
 
 export async function POST(req: NextRequest) {
