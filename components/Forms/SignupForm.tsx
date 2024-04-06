@@ -19,6 +19,7 @@ export default function SignupForm() {
   const planType = searchParams.get('planType')
   const [state, formAction] = useFormState(signup, initialState)
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
@@ -132,8 +133,12 @@ export default function SignupForm() {
         <div className="relative mt-2">
           <input
             id="password-confirmation"
-            name="password"
+            name="passwordConfirmation"
             type={showPassword ? 'text' : 'password'}
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value)
+            }}
             placeholder="Enter Password"
             autoComplete="new-password"
             required
