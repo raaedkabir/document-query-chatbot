@@ -13,6 +13,7 @@ import termsSchema from './schemas/terms-schema'
 import dashboardNavbarSchema from './schemas/dashboard-navbar-schema'
 import dashboardSchema from './schemas/dashboard-schema'
 import dashboardChatSchema from './schemas/dashboard-chat-schema'
+import dashboardAccountSchema from './schemas/dashboard-account-schema'
 import dashboardHelpSchema from './schemas/dashboard-help-schema'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
@@ -39,6 +40,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     // Dashboard pages
     dashboardSchema,
     dashboardChatSchema,
+    dashboardAccountSchema,
     dashboardHelpSchema,
   ],
 }
