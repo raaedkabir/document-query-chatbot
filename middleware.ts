@@ -74,6 +74,10 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(`${process.env.DOMAIN_NAME}/login`)
     }
 
+    if (request.cookies.has('AccessToken') && request.cookies.has('IdToken')) {
+      return NextResponse.next()
+    }
+
     const refreshToken = request.cookies.get('RefreshToken')!
     const userId = request.cookies.get('UserId')!
 
