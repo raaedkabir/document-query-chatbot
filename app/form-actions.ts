@@ -200,14 +200,12 @@ export async function signup(_prevState: FormState, formData: FormData) {
     name: z.string().min(1),
     password: z.string().min(8),
     passwordConfirmation: z.string().min(8),
-    planType: z.string(),
   })
   const parse = schema.safeParse({
     email: formData.get('email'),
     name: formData.get('name'),
     password: formData.get('password'),
     passwordConfirmation: formData.get('passwordConfirmation'),
-    planType: formData.get('planType'),
   })
 
   if (formData.get('password') !== formData.get('passwordConfirmation')) {

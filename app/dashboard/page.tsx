@@ -6,11 +6,16 @@ import { getUserDetails } from '@/services/cognito'
 import { getUserRecord } from '@/services/dynamodb'
 import { listObjects } from '@/services/storage'
 import { getDashboardCopy } from '@/sanity/utils/dashboard'
-import { retrievePlanLimits } from '../actions'
+import { checkForValidPlan, retrievePlanLimits } from '../actions'
 
-export default async function Dashboard() {
+export default async function Dashboard({
+  searchParams,
+}: {
+  searchParams: { selectedPlan?: string }
+}) {
   const accessToken = cookies().get('AccessToken')?.value!
   const idToken = cookies().get('IdToken')?.value!
+  const selectedPlan = cookies().get('selectedPlan')?.value
 
   const dashboardCopy = await getDashboardCopy()
 
@@ -22,6 +27,10 @@ export default async function Dashboard() {
     )?.Value || ''
 
   const userRecord = await getUserRecord(userId)
+  await checkForValidPlan(
+    userRecord.Item?.stripe_customer_id || '',
+    searchParams.selectedPlan || selectedPlan || ''
+  )
   const planLimits = await retrievePlanLimits(
     userRecord.Item?.stripe_customer_id || ''
   )

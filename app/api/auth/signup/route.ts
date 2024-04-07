@@ -3,8 +3,8 @@ import { signUp } from '@/services/cognito'
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password, planType } = await req.json()
-    const sessionData = await signUp(name, email, password, planType)
+    const { name, email, password } = await req.json()
+    const sessionData = await signUp(name, email, password)
 
     return NextResponse.json({
       message: 'Successfully signed up!',

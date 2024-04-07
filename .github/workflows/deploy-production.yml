@@ -54,6 +54,7 @@ jobs:
           echo "USER_POOL_CLIENT_SECRET=${{ secrets.USER_POOL_CLIENT_SECRET }}" >> .env
           echo "CONTACT_FORM_API_KEY=${{ secrets.CONTACT_FORM_API_KEY }}" >> .env
           echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> .env
+          echo "STRIPE_FREE_PLAN_PRICE_ID=${{ vars.STRIPE_FREE_PLAN_PRICE_ID }}" >> .env
           echo "AWS_REGION=${{ vars.AWS_REGION }}" >> .env
           echo "DOMAIN_NAME=${{ vars.DOMAIN_NAME }}" >> .env
           echo "ACM_CERTIFICATE_ARN=${{ vars.ACM_CERTIFICATE_ARN }}" >> .env
@@ -88,6 +89,7 @@ jobs:
             USER_POOL_CLIENT_SECRET=${{ secrets.USER_POOL_CLIENT_SECRET }}
             CONTACT_FORM_API_KEY=${{ secrets.CONTACT_FORM_API_KEY }}
             STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}
+            STRIPE_FREE_PLAN_PRICE_ID=${{ vars.STRIPE_FREE_PLAN_PRICE_ID }}
             AWS_REGION=${{ vars.AWS_REGION }}
             DOMAIN_NAME=${{ vars.DOMAIN_NAME }}
             ACM_CERTIFICATE_ARN=${{ vars.ACM_CERTIFICATE_ARN }}

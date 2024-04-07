@@ -24,8 +24,7 @@ const cognitoClient = new CognitoIdentityProviderClient({
 export const signUp = async (
   name: string,
   username: string,
-  password: string,
-  planType: string
+  password: string
 ) =>
   await cognitoClient.send(
     new SignUpCommand({
@@ -38,10 +37,14 @@ export const signUp = async (
           Name: 'given_name',
           Value: name,
         },
-        {
-          Name: 'custom:planType',
-          Value: planType,
-        },
+        ...(process.env.TEST_MODE === 'true'
+          ? [
+              {
+                Name: 'custom:testMode',
+                Value: 'true',
+              },
+            ]
+          : []),
       ],
     })
   )

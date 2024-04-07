@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { useFormState } from 'react-dom'
 import toast from 'react-hot-toast'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
@@ -15,8 +14,6 @@ const initialState = {
 }
 
 export default function SignupForm() {
-  const searchParams = useSearchParams()
-  const planType = searchParams.get('planType')
   const [state, formAction] = useFormState(signup, initialState)
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -30,13 +27,6 @@ export default function SignupForm() {
 
   return (
     <form className="space-y-6" action={formAction}>
-      <input
-        type="hidden"
-        id="planType"
-        name="planType"
-        value={planType || ''}
-      />
-
       <div>
         <div className="flex items-center justify-between">
           <label
