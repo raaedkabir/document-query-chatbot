@@ -36,7 +36,7 @@ export type IChatHistoryTableItem = {
   file_name: string
   chat: string
   chat_name: string
-  queries: string
+  queries: number
   chat_created: number
   last_updated: number // local secondary index
 }

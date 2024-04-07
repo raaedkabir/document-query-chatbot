@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline'
 import { listObjects } from '@/services/storage'
+import { getChats } from '@/services/dynamodb'
 import PDFIcon from './PDFIcon'
 import FileActionsButtons from './FileActionsButtons'
 
@@ -42,6 +43,8 @@ export default async function UploadedFiles({ userId }: { userId: string }) {
     )
   }
 
+  const { Items: ChatHistoryTableItems } = await getChats(userId)
+
   return (
     <>
       {files.map((file) => (
@@ -61,7 +64,13 @@ export default async function UploadedFiles({ userId }: { userId: string }) {
               {file.formattedUploadDate}
             </div>
             <div className="flex">
-              <ChatBubbleLeftRightIcon className="mr-2 size-6" /> 79
+              <ChatBubbleLeftRightIcon className="mr-2 size-6" />{' '}
+              {ChatHistoryTableItems.reduce((acc, chat) => {
+                if (chat.file_name === file.name) {
+                  acc += chat.queries
+                }
+                return acc
+              }, 0)}
             </div>
             <FileActionsButtons userId={userId} fileName={file.name || ''} />
           </div>
