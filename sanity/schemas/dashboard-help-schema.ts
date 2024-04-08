@@ -9,6 +9,7 @@ export default defineType({
       name: 'header',
       title: 'Header',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'faqList',

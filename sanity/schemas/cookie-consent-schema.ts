@@ -9,16 +9,19 @@ export default defineType({
       name: 'header',
       title: 'Header',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'cookieConsentDescription',
       title: 'Cookie Consent Description',
       type: 'text',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'buttonText',
       title: 'Cookie Consent Button Text',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     },
   ],
 })

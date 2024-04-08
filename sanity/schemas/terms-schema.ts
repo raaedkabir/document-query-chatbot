@@ -9,6 +9,7 @@ export default defineType({
       name: 'header',
       title: 'Header',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'description',
@@ -24,6 +25,7 @@ export default defineType({
           type: 'block',
         },
       ],
+      validation: (Rule) => Rule.required(),
     },
   ],
 })

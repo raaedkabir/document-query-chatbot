@@ -9,21 +9,25 @@ export default defineType({
       name: 'header',
       title: 'Header',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'description',
       title: 'Description',
       type: 'text',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'detailsHeader',
       title: 'Details Header',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'detailsDescription',
       title: 'Details Description',
       type: 'text',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'detailsList',
@@ -63,6 +67,7 @@ export default defineType({
       name: 'formHeader',
       title: 'Form Header',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'nameFormField',
