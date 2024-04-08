@@ -13,8 +13,10 @@ import {
   QuestionMarkCircleIcon,
   UserIcon,
 } from '@heroicons/react/24/outline'
-import ChatHistory from './ChatHistory'
+import ProgressBar from '@/components/UI/ProgressBar'
+import ChatHistory from '@/components/Dashboard/ChatHistory'
 import type { DashboardNavbarCopy } from '@/sanity/utils/dashboardNavbar'
+import type { retrievePlanLimits } from '@/app/actions'
 
 function NavbarWithNoSSR({
   copy,
@@ -22,12 +24,18 @@ function NavbarWithNoSSR({
   // profilePicture,
   givenName,
   userId,
+  planLimits,
+  uploadedFilesUsage,
+  stripeBillingPortalURL,
 }: {
   copy: DashboardNavbarCopy
   chatHistory: any[]
   // profilePicture: string
   givenName: string
   userId: string
+  planLimits: Awaited<ReturnType<typeof retrievePlanLimits>>
+  uploadedFilesUsage: number
+  stripeBillingPortalURL: string
 }) {
   const router = useRouter()
   const { isSm, isLg } = useBreakpoints()
@@ -48,6 +56,10 @@ function NavbarWithNoSSR({
 
     return () => window.removeEventListener('resize', handleResize)
   }, [isSidebarOpen, isLg])
+
+  const queryUsagePercentage = (250 / Number(planLimits.queries)) * 100
+  const uploadedFilesUsagePercentage =
+    (uploadedFilesUsage / Number(planLimits.pdfLimit)) * 100
 
   return (
     <>
@@ -118,9 +130,49 @@ function NavbarWithNoSSR({
                     <PDFIcon className="mr-2 size-6" /> {copy.filesTitle}
                   </Link>
                   <hr className="my-4 border-gray-dark/25" />
-                  <p className="mb-2 text-xl text-gray-dark">
-                    {copy.chatHistoryTitle}
-                  </p>
+                  <div className="rounded-2xl border border-gray-dark/50 p-5 text-sm">
+                    <h2 className="mb-2">{copy.accountUsageTitle.header}</h2>
+                    <div className="flex justify-between">
+                      <h3 className="flex items-center">
+                        <span>{copy.accountUsageTitle.queriesCopy}</span>
+                      </h3>
+                      <div>
+                        <span className="text-primary">250</span> /{' '}
+                        {planLimits.queries}
+                      </div>
+                    </div>
+
+                    <ProgressBar percentage={queryUsagePercentage} />
+
+                    <div className="h-4" />
+
+                    <div className="flex justify-between">
+                      <h3 className="flex items-center">
+                        <span>{copy.accountUsageTitle.uploadedFilesCopy}</span>
+                      </h3>
+                      <div>
+                        <span className="text-primary">
+                          {uploadedFilesUsage}
+                        </span>{' '}
+                        / {planLimits.pdfLimit}
+                      </div>
+                    </div>
+
+                    <ProgressBar percentage={uploadedFilesUsagePercentage} />
+                    {(queryUsagePercentage >= 50 ||
+                      uploadedFilesUsagePercentage >= 50) && (
+                      <div className="mt-4 flex justify-end">
+                        <Link
+                          className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
+                          href={stripeBillingPortalURL}
+                        >
+                          {copy.accountUsageTitle.limitCTAButtonText}
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                  <hr className="my-4 border-gray-dark/25" />
+                  <p className="mb-2 text-gray-dark">{copy.chatHistoryTitle}</p>
                   <ChatHistory
                     copy={copy}
                     chatHistory={chatHistory}

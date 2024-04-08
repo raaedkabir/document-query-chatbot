@@ -1,11 +1,15 @@
 import { cookies } from 'next/headers'
 import { getUserDetails } from '@/services/cognito'
-import { getChats } from '@/services/dynamodb'
+import { getChats, getUserRecord } from '@/services/dynamodb'
 import NavbarWithNoSSR from '@/components/Dashboard/Navbar'
 import { getDashboardNavbarCopy } from '@/sanity/utils/dashboardNavbar'
+import { getUploadedFilesUsage } from '@/lib/utils/getUploadedFilesUsage'
+import { retrievePlanLimits } from '@/app/actions'
+import { getStripeBillingPortalURL } from '@/lib/utils/getStripeBillingPortalURL'
 
 export default async function NavbarWrapper() {
   const accessToken = cookies().get('AccessToken')?.value!
+  const idToken = cookies().get('IdToken')?.value!
 
   const dashboardNavbarCopy = await getDashboardNavbarCopy()
 
@@ -23,12 +27,31 @@ export default async function NavbarWrapper() {
 
   const { Items: ChatHistoryTableItems } = await getChats(userId)
 
+  const userRecord = await getUserRecord(userId)
+
+  const planLimits = await retrievePlanLimits(
+    userRecord.Item?.stripe_customer_id || ''
+  )
+
+  const uploadedFilesUsage = await getUploadedFilesUsage(
+    idToken,
+    userId,
+    planLimits
+  )
+
+  const stripeBillingPortalURL = await getStripeBillingPortalURL(
+    userRecord.Item?.stripe_customer_id
+  )
+
   return (
     <NavbarWithNoSSR
       copy={dashboardNavbarCopy}
       chatHistory={ChatHistoryTableItems}
       givenName={givenName}
       userId={userId}
+      planLimits={planLimits}
+      uploadedFilesUsage={uploadedFilesUsage}
+      stripeBillingPortalURL={stripeBillingPortalURL}
     />
   )
 }
