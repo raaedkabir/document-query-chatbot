@@ -4,6 +4,15 @@ import { groq } from 'next-sanity'
 export interface DashboardCopy {
   title: string
   header: string
+  accountUsageSection: {
+    header: string
+    queriesCopy: string
+    uploadedFilesCopy: string
+    limitCopy: string
+    limitCTAMessage: string
+    limitCTAButtonText: string
+    limitAdditionalCopy: string
+  }
   uploadFileButtonText: string
   uploadModalTitle: string
   uploadModalContent: string
@@ -28,6 +37,15 @@ export async function getDashboardCopy(): Promise<DashboardCopy> {
     groq`*[_type == "dashboard"][0] {
       title,
       header,
+      accountUsageSection[0] {
+        header,
+        queriesCopy,
+        uploadedFilesCopy,
+        limitCopy,
+        limitCTAMessage,
+        limitCTAButtonText,
+        limitAdditionalCopy
+      },
       uploadFileButtonText,
       uploadModalTitle,
       uploadModalContent,

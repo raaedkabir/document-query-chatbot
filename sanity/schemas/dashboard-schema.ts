@@ -18,6 +18,61 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     },
     {
+      name: 'accountUsageSection',
+      title: 'Account Usage Section',
+      type: 'array',
+      of: [
+        {
+          type: 'document',
+          fields: [
+            {
+              name: 'header',
+              title: 'Header',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'queriesCopy',
+              title: 'Queries Copy',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'uploadedFilesCopy',
+              title: 'Uploaded Files Copy',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'limitCopy',
+              title: 'Limit Copy',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'limitCTAMessage',
+              title: 'Limit CTA Message',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'limitCTAButtonText',
+              title: 'Limit CTA Button Text',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'limitAdditionalCopy',
+              title: 'Limit CTA Additional Copy',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+        },
+      ],
+      validation: (Rule) => Rule.required().min(1),
+    },
+    {
       name: 'uploadFileButtonText',
       title: 'Upload File Button',
       type: 'string',
