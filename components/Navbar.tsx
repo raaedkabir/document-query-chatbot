@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
-import type { NavbarCopy as NavbarCopy } from '@/sanity/utils/navbar'
+import type { NavbarCopy } from '@/sanity/utils/navbar'
 
 export default function Navbar({ copy }: { copy: NavbarCopy }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -21,7 +22,14 @@ export default function Navbar({ copy }: { copy: NavbarCopy }) {
     <nav className="sticky inset-x-0 top-0 z-30 h-14 w-full border-b border-gray-dark/25 bg-white/75 backdrop-blur-lg transition-all">
       <div className="mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
         <div className="flex h-14 items-center justify-between">
-          <Link className="z-50 flex font-semibold" href="/">
+          <Link className="z-50 flex items-center font-semibold" href="/">
+            <Image
+              alt="logo"
+              width={copy.imageData.width}
+              height={copy.imageData.height}
+              className="mr-2 size-8 rounded-md"
+              src={copy.imageSrc}
+            />
             <span>{copy.title}</span>
           </Link>
           <button
