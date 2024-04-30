@@ -52,9 +52,9 @@ export default async function UploadedFiles({ userId }: { userId: string }) {
           key={file.name}
           className="basis-full overflow-hidden px-2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
         >
-          <div className="flex">
+          <div className="flex items-center">
             <PDFIcon className="mr-2 size-8 shrink-0" />{' '}
-            <h2 className="overflow-hidden text-ellipsis text-2xl">
+            <h2 className="overflow-hidden text-ellipsis text-xl">
               {file.name}
             </h2>
           </div>
