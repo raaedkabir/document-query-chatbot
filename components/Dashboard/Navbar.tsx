@@ -25,6 +25,7 @@ function NavbarWithNoSSR({
   givenName,
   userId,
   planLimits,
+  queriesUsage,
   uploadedFilesUsage,
   stripeBillingPortalURL,
 }: {
@@ -34,6 +35,7 @@ function NavbarWithNoSSR({
   givenName: string
   userId: string
   planLimits: Awaited<ReturnType<typeof retrievePlanLimits>>
+  queriesUsage: number
   uploadedFilesUsage: number
   stripeBillingPortalURL: string
 }) {
@@ -57,7 +59,7 @@ function NavbarWithNoSSR({
     return () => window.removeEventListener('resize', handleResize)
   }, [isSidebarOpen, isLg])
 
-  const queryUsagePercentage = (250 / Number(planLimits.queries)) * 100
+  const queryUsagePercentage = (queriesUsage / Number(planLimits.queries)) * 100
   const uploadedFilesUsagePercentage =
     (uploadedFilesUsage / Number(planLimits.pdfLimit)) * 100
 
@@ -137,7 +139,7 @@ function NavbarWithNoSSR({
                         <span>{copy.accountUsageTitle.queriesCopy}</span>
                       </h3>
                       <div>
-                        <span className="text-primary">250</span> /{' '}
+                        <span className="text-primary">{queriesUsage}</span> /{' '}
                         {planLimits.queries}
                       </div>
                     </div>

@@ -3,6 +3,7 @@ import { getUserDetails } from '@/services/cognito'
 import { getChats, getUserRecord } from '@/services/dynamodb'
 import NavbarWithNoSSR from '@/components/Dashboard/Navbar'
 import { getDashboardNavbarCopy } from '@/sanity/utils/dashboardNavbar'
+import { getQueriesUsage } from '@/lib/utils/getQueriesUsage'
 import { getUploadedFilesUsage } from '@/lib/utils/getUploadedFilesUsage'
 import { retrievePlanLimits } from '@/app/actions'
 import { getStripeBillingPortalURL } from '@/lib/utils/getStripeBillingPortalURL'
@@ -33,6 +34,8 @@ export default async function NavbarWrapper() {
     userRecord.Item?.stripe_customer_id || ''
   )
 
+  const queriesUsage = await getQueriesUsage(userId, planLimits)
+
   const uploadedFilesUsage = await getUploadedFilesUsage(
     idToken,
     userId,
@@ -50,6 +53,7 @@ export default async function NavbarWrapper() {
       givenName={givenName}
       userId={userId}
       planLimits={planLimits}
+      queriesUsage={queriesUsage}
       uploadedFilesUsage={uploadedFilesUsage}
       stripeBillingPortalURL={stripeBillingPortalURL}
     />

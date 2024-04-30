@@ -1,8 +1,10 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getUserDetails } from '@/services/cognito'
-import { getChat } from '@/services/dynamodb'
+import { getUserRecord, getChat } from '@/services/dynamodb'
 import PanelWrapper from '@/components/Dashboard/Chat/PanelWrapper'
+import { getQueriesUsage } from '@/lib/utils/getQueriesUsage'
+import { retrievePlanLimits } from '@/app/actions'
 import { getDashboardChatCopy } from '@/sanity/utils/dashboardChat'
 
 export default async function DashboardChat({
@@ -40,7 +42,24 @@ export default async function DashboardChat({
    * Get chat details
    */
   const { Item: chatDetails } = await getChat(userId, chatId)
+
+  /**
+   * Get queries usage
+   */
+  const userRecord = await getUserRecord(userId)
+  const planLimits = await retrievePlanLimits(
+    userRecord.Item?.stripe_customer_id || ''
+  )
+  const queriesUsage = await getQueriesUsage(userId, planLimits)
+
   if (!chatDetails) redirect('/dashboard')
 
-  return <PanelWrapper copy={dashboardChatCopy} chatDetails={chatDetails} />
+  return (
+    <PanelWrapper
+      copy={dashboardChatCopy}
+      chatDetails={chatDetails}
+      usedQueries={queriesUsage}
+      maxQueries={+planLimits.queries}
+    />
+  )
 }

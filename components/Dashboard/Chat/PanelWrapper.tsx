@@ -11,9 +11,13 @@ import type { DashboardChatCopy } from '@/sanity/utils/dashboardChat'
 export default function PanelWrapper({
   copy,
   chatDetails: { file_name: fileName, user_id: userId, chat_id: chatId, chat },
+  usedQueries,
+  maxQueries,
 }: {
   copy: DashboardChatCopy
   chatDetails: IChatHistoryTableItem
+  usedQueries: number
+  maxQueries: number
 }) {
   const [displayChat, setDisplayChat] = useState(true)
   const { isSm, isLg } = useBreakpoints()
@@ -46,6 +50,8 @@ export default function PanelWrapper({
             userId={userId}
             chatId={chatId}
             chat={chat}
+            usedQueries={usedQueries}
+            maxQueries={maxQueries}
           />
         </div>
       </div>

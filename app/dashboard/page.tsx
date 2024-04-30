@@ -12,6 +12,7 @@ import { getUserDetails } from '@/services/cognito'
 import { getUserRecord } from '@/services/dynamodb'
 import { listObjects } from '@/services/storage'
 import { getDashboardCopy } from '@/sanity/utils/dashboard'
+import { getQueriesUsage } from '@/lib/utils/getQueriesUsage'
 import { getUploadedFilesUsage } from '@/lib/utils/getUploadedFilesUsage'
 import { checkForValidPlan, retrievePlanLimits } from '@/app/actions'
 import { getStripeBillingPortalURL } from '@/lib/utils/getStripeBillingPortalURL'
@@ -70,13 +71,15 @@ export default async function Dashboard({
     // Filter out the directory object
     ?.filter((file) => file.name !== '')
 
+  const queriesUsage = await getQueriesUsage(userId, planLimits)
+
   const uploadedFilesUsage = await getUploadedFilesUsage(
     idToken,
     userId,
     planLimits
   )
 
-  const queryUsagePercentage = (250 / Number(planLimits.queries)) * 100
+  const queryUsagePercentage = (queriesUsage / Number(planLimits.queries)) * 100
   const uploadedFilesUsagePercentage =
     (uploadedFilesUsage / Number(planLimits.pdfLimit)) * 100
 
@@ -98,8 +101,10 @@ export default async function Dashboard({
             </span>
           </h3>
           <div>
-            <span className="text-lg font-bold text-primary">250</span> /{' '}
-            {planLimits.queries} {dashboardCopy.accountUsageSection.limitCopy}
+            <span className="text-lg font-bold text-primary">
+              {queriesUsage}
+            </span>{' '}
+            / {planLimits.queries} {dashboardCopy.accountUsageSection.limitCopy}
           </div>
         </div>
 

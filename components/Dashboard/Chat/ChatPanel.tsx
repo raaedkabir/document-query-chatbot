@@ -6,7 +6,7 @@ import Image from 'next/image'
 import toast from 'react-hot-toast'
 import { ArrowRightIcon, ClipboardIcon } from '@heroicons/react/24/outline'
 import LoadingIcon from '@/components/LoadingIcon'
-import { updateChat } from '@/services/dynamodb'
+import { updateChat, putNewQuery } from '@/services/dynamodb'
 import { DashboardChatCopy } from '@/sanity/utils/dashboardChat'
 
 export default function ChatPanel({
@@ -15,12 +15,16 @@ export default function ChatPanel({
   userId,
   chatId,
   chat,
+  usedQueries,
+  maxQueries,
 }: {
   copy: DashboardChatCopy
   fileName: string
   userId: string
   chatId: string
   chat: string
+  usedQueries: number
+  maxQueries: number
 }) {
   const chatRef = useRef<HTMLInputElement>(null)
   const chatHistory = JSON.parse(chat)
@@ -63,8 +67,10 @@ export default function ChatPanel({
       !isLoading
     ) {
       updateChat(userId, chatId, JSON.stringify(messages))
+      putNewQuery(userId, chatId)
+      usedQueries++
     }
-  }, [messages, chatHistory, isLoading, userId, chatId])
+  }, [messages, chatHistory, isLoading, userId, chatId, usedQueries])
 
   const copyTextToClipboard = async (text: string) => {
     if ('clipboard' in navigator) {
@@ -130,7 +136,16 @@ export default function ChatPanel({
       </div>
       <div className="border-t-2 border-gray-light px-4 pt-4 sm:mb-0">
         <div className="relative flex">
-          <form onSubmit={handleSubmit} className="w-full">
+          <form
+            onSubmit={(e) => {
+              if (usedQueries > maxQueries) {
+                toast.error(copy.queryLimitErrorMessage)
+              } else {
+                handleSubmit(e)
+              }
+            }}
+            className="w-full"
+          >
             <label htmlFor="prompt" className="sr-only">
               {copy.promptTextField.label ||
                 'Enter a prompt for the AI ChatBot to answer'}

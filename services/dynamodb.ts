@@ -41,6 +41,13 @@ export type IChatHistoryTableItem = {
   last_updated: number // local secondary index
 }
 
+export type IChatQueriesTableItem = {
+  user_id: string // partition key
+  query_id: string // sort key
+  chat_id: string
+  query_created: number
+}
+
 const client = new DynamoDBClient({
   credentials: {
     accessKeyId: process.env.DYNAMODB_ACCESS_KEY_ID!,
@@ -231,4 +238,37 @@ export const deleteFileFromChatHistory = async (
   const deleteResponse = await docClient.send(deleteCommands)
 
   return deleteResponse
+}
+
+export const putNewQuery = async (userId: string, chatId: string) => {
+  const queryId = randomUUID()
+  const command = new PutCommand({
+    TableName: 'mydocqa-queries-history',
+    Item: {
+      user_id: userId,
+      query_id: queryId,
+      chat_id: chatId,
+      query_created: Date.now(),
+    },
+  })
+
+  await docClient.send(command)
+
+  revalidatePath('/dashboard')
+}
+
+export const getQueries = async (userId: string) => {
+  const command = new QueryCommand({
+    TableName: 'mydocqa-queries-history',
+    KeyConditionExpression: 'user_id = :userId',
+    ExpressionAttributeValues: {
+      ':userId': userId,
+    },
+  })
+
+  const response = (await docClient.send(
+    command
+  )) as IQueryCommandOutput<IChatQueriesTableItem>
+
+  return response
 }

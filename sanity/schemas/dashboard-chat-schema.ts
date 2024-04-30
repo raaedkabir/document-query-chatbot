@@ -12,6 +12,12 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     },
     {
+      name: 'queryLimitErrorMessage',
+      title: 'Query Limit Error Message',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
       name: 'copiedTextToClipboardMessage',
       title: 'Copied Text To Clipboard Message',
       type: 'string',

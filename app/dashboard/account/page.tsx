@@ -10,6 +10,7 @@ import ProgressBar from '@/components/UI/ProgressBar'
 import { getUserDetails } from '@/services/cognito'
 import { getUserRecord } from '@/services/dynamodb'
 import { retrievePlanLimits } from '@/app/actions'
+import { getQueriesUsage } from '@/lib/utils/getQueriesUsage'
 import { getUploadedFilesUsage } from '@/lib/utils/getUploadedFilesUsage'
 import { getDashboardAccountCopy } from '@/sanity/utils/dashboardAccount'
 import { getStripeBillingPortalURL } from '@/lib/utils/getStripeBillingPortalURL'
@@ -37,6 +38,8 @@ export default async function DashboardAccount() {
   const planLimits = await retrievePlanLimits(
     userRecord.Item?.stripe_customer_id || ''
   )
+
+  const queriesUsage = await getQueriesUsage(userId, planLimits)
 
   const uploadedFilesUsage = await getUploadedFilesUsage(
     idToken,
@@ -139,7 +142,7 @@ export default async function DashboardAccount() {
                     </h3>
                     <div>
                       <span className="text-lg font-bold text-primary">
-                        250
+                        {queriesUsage}
                       </span>{' '}
                       / {planLimits.queries}{' '}
                       {dashboardAccountCopy.accountUsageSection.limitCopy}
@@ -147,7 +150,9 @@ export default async function DashboardAccount() {
                   </div>
 
                   <ProgressBar
-                    percentage={(250 / Number(planLimits.queries)) * 100}
+                    percentage={
+                      (queriesUsage / Number(planLimits.queries)) * 100
+                    }
                   />
 
                   <div className="h-4" />
