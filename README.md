@@ -39,6 +39,20 @@ The application uses Pinecone to store the document embeddings generated from th
   <figcaption>Source: https://coolors.co/897ceb-e9e8ee-99989f-575151-b2b7f6-d65e57</figcaption>
 </figure>
 
+## User Flow Diagram
+
+<figure>
+  <img src="./docs/diagrams/User Flow Diagram.png" alt="User Flow Diagram">
+  <figcaption>Diagram made with draw.io</figcaption>
+</figure>
+
+## AWS Architecture Diagram
+
+<figure>
+  <img src="./docs/diagrams/AWS Architecture.png" alt="AWS Architecture Diagram">
+  <figcaption>Diagram made with draw.io</figcaption>
+</figure>
+
 ## Services Used
 
 - [AWS](https://aws.amazon.com/)
