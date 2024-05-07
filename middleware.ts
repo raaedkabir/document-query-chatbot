@@ -2,6 +2,19 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { applySetCookie } from '@/lib/utils/applySetCookie'
 
+function clearCookies(response: NextResponse) {
+  response.cookies.delete('UserId')
+  response.cookies.delete('IdToken')
+  response.cookies.delete('AccessToken')
+  response.cookies.delete('RefreshToken')
+}
+
+function redirectToLogin() {
+  const nextResponse = NextResponse.redirect(`${process.env.DOMAIN_NAME}/login`)
+  clearCookies(nextResponse)
+  return nextResponse
+}
+
 // https://nextjs.org/docs/app/building-your-application/authentication
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
@@ -69,9 +82,18 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  if (pathname.startsWith('/login')) {
+    if (request.cookies.has('RefreshToken') && request.cookies.has('UserId')) {
+      return NextResponse.redirect(`${process.env.DOMAIN_NAME}/dashboard`)
+    }
+  }
+
   if (pathname.startsWith('/dashboard')) {
-    if (!request.cookies.has('RefreshToken')) {
-      return NextResponse.redirect(`${process.env.DOMAIN_NAME}/login`)
+    if (
+      !request.cookies.has('RefreshToken') ||
+      !request.cookies.has('UserId')
+    ) {
+      return redirectToLogin()
     }
 
     if (request.cookies.has('AccessToken') && request.cookies.has('IdToken')) {
@@ -128,16 +150,7 @@ export async function middleware(request: NextRequest) {
         await response.json()
       )
 
-      const nextResponse = NextResponse.redirect(
-        `${process.env.DOMAIN_NAME}/login`
-      )
-
-      nextResponse.cookies.delete('UserId')
-      nextResponse.cookies.delete('IdToken')
-      nextResponse.cookies.delete('AccessToken')
-      nextResponse.cookies.delete('RefreshToken')
-
-      return nextResponse
+      return redirectToLogin()
     }
   }
 
